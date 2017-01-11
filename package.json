@@ -1,7 +1,7 @@
 {
-  "name": "boilerplate",
+  "name": "flashcards",
   "version": "0.0.1",
-  "description": "boilerplate for single page apps",
+  "description": "a flashcard app for language learning",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --content-base app --history-api-fallback --progress --inline --hot --host 0.0.0.0 --debug --devtool cheap-module-eval-source-map --output-pathinfo",
@@ -11,7 +11,7 @@
   "author": "Ben Lambert",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ben-x9/boilerplate.git"
+    "url": "git+https://github.com/ben-x9/flashcards.git"
   },
   "license": "MIT",
   "devDependencies": {
