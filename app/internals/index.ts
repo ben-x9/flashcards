@@ -23,9 +23,10 @@ import * as csstips from 'csstips';
 csstips.normalize();
 csstips.setupPage('#root');
 
-import * as home from './pages/home';
+import * as router from './router';
+import 'routes';
 
-root.view = patch(root.view, h('div#root', home.show()));
+root.view = patch(root.view, h('div#root', router.show()));
 
 // Enable Webpack Hot Module Replacement
 // http://andrewhfarmer.com/webpack-hmr-tutorial/

@@ -22,8 +22,11 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
+    "@types/path-to-regexp": "^1.0.29",
     "csstips": "0.0.3",
-    "snabbdom": "github:snabbdom/snabbdom",
+    "history": "^4.5.0",
+    "path-to-regexp": "^1.7.0",
+    "snabbdom": "^0.6.1",
     "typestyle": "^0.22.1"
   }
 }
