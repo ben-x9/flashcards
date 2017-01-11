@@ -10,7 +10,7 @@
   "search.exclude": {
     "**/node_modules": true,
     "**/build": true,
-    "**/typedefs": true
+    "**/types": true
   },
   "editor.scrollBeyondLastLine": false
 }
