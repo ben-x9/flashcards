@@ -35,8 +35,17 @@ export function pathNotFound(page: Page) {
   defaultPage = page;
 }
 
-export function view(pathname: string, update: (action: Action) => void) {
-  const currentRoute = routes.find((route) =>
-    !!route.regexp.exec(pathname));
-  return (currentRoute ? currentRoute.page : defaultPage).view(update);
+export function view(path: string, update: (action: Action) => void) {
+  let currentRoute: Route | null = null;
+  let pathArgs: string[] = [];
+  for (let route of routes) {
+    const match = route.regexp.exec(path);
+    if (match) {
+      currentRoute = route;
+      pathArgs = match.slice(1);
+      break;
+    }
+  }
+  return (currentRoute ? currentRoute.page : defaultPage)
+    .view(update, ...pathArgs);
 }
