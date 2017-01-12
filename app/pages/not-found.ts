@@ -1,4 +1,8 @@
-import { h } from 'snabbdom/src/snabbdom';
+import { div } from 'core/html';
+import { style } from 'typestyle';
+import { vertical, center, margin } from 'csstips';
 
 export const view = () =>
-  h(`div`, 'not found');
+  div(style(margin(10), vertical, center), [
+    div('not found'),
+  ]);
