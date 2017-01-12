@@ -13,6 +13,14 @@ const patch = init([ // init patch function with choosen modules
   snabbAttrs,  // for setting attr on DOM elements
 ]);
 
+let unlisten: () => void;
+
+// enable webpack hot module replacement
+if (module.hot) {
+  module.hot.accept();
+  module.hot.dispose(() => unlisten());
+}
+
 interface Root extends Window {
   view: VNode | HTMLElement;
 }
@@ -26,7 +34,19 @@ csstips.setupPage('#root');
 import * as router from './router';
 import 'routes';
 
-root.view = patch(root.view, h('div#root', router.show()));
+import createHistory from 'history/createBrowserHistory';
+const history = createHistory();
 
-// enable webpack hot module replacement
-if (module.hot) module.hot.accept();
+function update(action: router.Action) {
+  if (action.type === 'GOTO') {
+    history.push(action.path);
+  }
+}
+
+refreshView(history.location.pathname);
+unlisten = history.listen((location) => refreshView(location.pathname));
+
+function refreshView(pathname: string) {
+  root.view = patch(root.view,
+    h('div#root', router.view(history.location.pathname, update)));
+}
