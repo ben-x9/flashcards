@@ -6,10 +6,8 @@ const history = createHistory();
 
 const location = history.location;
 
-let routes = [] as Route[];
+const routes = [] as Route[];
 let _defaultPage: Page;
-
-(<any>window).routes = routes;
 
 declare interface Page {
   show: () => VNode;
@@ -21,7 +19,7 @@ declare interface Route {
 }
 
 export function reset() {
-  routes = [];
+  routes.length = 0;
 }
 
 export function page(path: string, page: Page) {
