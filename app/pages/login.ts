@@ -1,4 +1,4 @@
-import { h } from 'snabbdom/src/snabbdom';
+import { div } from 'core/html';
 
 export const show = () =>
-  h(`div`, 'login');
+  div('login');
