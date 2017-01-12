@@ -1,4 +1,4 @@
 import { div } from 'core/html';
 
-export const show = () =>
+export const view = () =>
   div('login');

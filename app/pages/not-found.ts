@@ -1,4 +1,4 @@
 import { h } from 'snabbdom/src/snabbdom';
 
-export const show = () =>
+export const view = () =>
   h(`div`, 'not found');

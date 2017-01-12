@@ -10,7 +10,7 @@ const routes = [] as Route[];
 let _defaultPage: Page;
 
 declare interface Page {
-  show: () => VNode;
+  view: () => VNode;
 }
 
 declare interface Route {
@@ -32,7 +32,7 @@ export function defaultPage(page: Page) {
 
 export function show() {
   for (let route of routes) {
-    if (route.regexp.exec(location.pathname)) return route.page.show();
+    if (route.regexp.exec(location.pathname)) return route.page.view();
   }
-  return _defaultPage.show();
+  return _defaultPage.view();
 }
