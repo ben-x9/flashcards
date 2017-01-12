@@ -7,6 +7,7 @@ export const view = (label: string, onclick: () => void) =>
   div(style(content, padding(10), {
     backgroundColor: lightgray.toString(),
     cursor: 'pointer',
+    borderRadius: '3px',
     $nest: {
       '&:hover': {
         backgroundColor: lightgray.lighten(0.05).toString(),
