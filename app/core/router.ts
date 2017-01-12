@@ -1,5 +1,5 @@
-import { VNode } from 'snabbdom/src/vnode';
 import * as pathToRegexp from 'path-to-regexp';
+import { View } from 'core/frame';
 
 const routes = [] as Route[];
 let defaultPage: Page;
@@ -10,7 +10,7 @@ declare interface Route {
 }
 
 declare interface Page {
-  view: (update: (action: Action) => void) => VNode;
+  view: View<Action>;
 }
 
 export type Action = Goto;
