@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/path-to-regexp": "^1.0.29",
     "csstips": "0.0.3",
+    "csx": "^8.2.1",
     "history": "^4.5.0",
     "path-to-regexp": "^1.7.0",
     "snabbdom": "^0.6.1",
