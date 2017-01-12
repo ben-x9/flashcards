@@ -6,8 +6,10 @@ const history = createHistory();
 
 const location = history.location;
 
-const routes = [] as Route[];
+let routes = [] as Route[];
 let _defaultPage: Page;
+
+(<any>window).routes = routes;
 
 declare interface Page {
   show: () => VNode;
@@ -16,6 +18,10 @@ declare interface Page {
 declare interface Route {
   regexp: pathToRegexp.PathRegExp;
   page: Page;
+}
+
+export function reset() {
+  routes = [];
 }
 
 export function page(path: string, page: Page) {
