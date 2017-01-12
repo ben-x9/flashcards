@@ -4,9 +4,9 @@
   "description": "a flashcard app for language learning",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --content-base app --history-api-fallback --progress --inline --hot --host 0.0.0.0 --debug --devtool cheap-module-eval-source-map --output-pathinfo",
+    "start": "webpack-dev-server --content-base app/core --history-api-fallback --progress --inline --hot --host 0.0.0.0 --debug --devtool cheap-module-eval-source-map --output-pathinfo",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --optimize-minimize && mkdir -p build/ && mv bundle.js build/ && cp app/index.html build/"
+    "build": "webpack --optimize-minimize && mkdir -p build/ && mv bundle.js build/ && cp app/core/index.html build/"
   },
   "author": "Ben Lambert",
   "repository": {
