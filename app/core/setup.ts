@@ -42,29 +42,46 @@ csstips.setupPage('#root');
 import createHistory from 'history/createBrowserHistory';
 const history = createHistory();
 
-function update(action: Root.Action) {
-  const [newStore, newState, effect] = Root.update(action);
+interface GoBack {
+  type: 'POP';
+  path: string;
+  state: Root.State;
+}
+
+type Action = Root.Action | GoBack;
+
+import { create } from 'jsondiffpatch';
+const json = create();
+
+function update(action: Action) {
+  const [newStore, newState, effect] =
+    action.type === 'POP' ?
+      [ Root.store,
+        json.diff(Root.state, action.state) ? action.state : Root.state,
+        null] :
+      Root.update(action);
   if (process.env.NODE_ENV === 'development')
     logAction(action, newStore, newState, effect);
   const shouldRefresh = newStore !== Root.store || newState !== Root.state;
+  if (action.type !== 'POP' && newState !== Root.state)
+    history.replace(history.location.pathname, newState);
   Root.updateModel(newStore, newState);
   if (process.env.NODE_ENV === 'development') {
     global.store = Root.store;
     global.state = Root.state;
   }
   if (effect && effect.type === 'GOTO') {
-    history.push(effect.path);
-  } else if (shouldRefresh) {
+    history.push(effect.path, newState);
+    refreshView();
+  } else if (shouldRefresh || action.type === 'POP') {
     refreshView();
   }
 }
 
 import { Effect } from 'core/effects';
 import { omit } from 'lodash';
-import { create } from 'jsondiffpatch';
-const jdp = create();
 
-function logAction(action: Root.Action, store: Root.Store, state: Root.State, effect: Effect) {
+function logAction(action: Action, store: Root.Store, state: Root.State, effect: Effect) {
   let actionPath = action.type;
   let actualAction: any = action;
   while (actualAction.action) {
@@ -74,16 +91,24 @@ function logAction(action: Root.Action, store: Root.Store, state: Root.State, ef
   actionPath += ' ' + JSON.stringify(omit(actualAction, 'type'));
   let msg = actionPath;
   if (store !== Root.store)
-    msg += '\n-> store ' + JSON.stringify(jdp.diff(Root.store, store));
+    msg += '\n-> store ' + JSON.stringify(json.diff(Root.store, store));
   if (state !== Root.state)
-    msg += '\n-> state ' + JSON.stringify(jdp.diff(Root.state, state));
+    msg += '\n-> state ' + JSON.stringify(json.diff(Root.state, state));
   if (effect)
     msg += '\n-> effect ' + JSON.stringify(effect);
   console.log(msg);
 }
 
 refreshView();
-unlisten = history.listen(() => refreshView());
+unlisten = history.listen((location, action) => {
+  if (action === 'POP') {
+    update({
+      type: 'POP',
+      path: location.pathname,
+      state: <Root.State>(location.state || Root.state),
+    });
+  }
+});
 
 function refreshView() {
   global.view = patch(global.view,

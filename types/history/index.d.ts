@@ -14,8 +14,8 @@ declare module 'history' {
     listenBefore(hook: TransitionHook): () => void;
     listen(listener: LocationListener): () => void;
     transitionTo(location: Location): void;
-    push(path: LocationDescriptor): void;
-    replace(path: LocationDescriptor): void;
+    push(path: LocationDescriptor, state?: LocationState): void;
+    replace(path: LocationDescriptor, state?: LocationState): void;
     go(n: number): void;
     goBack(): void;
     goForward(): void;
@@ -59,7 +59,6 @@ declare module 'history' {
     search: Search;
     query: Query;
     state: LocationState;
-    action: Action;
     key: LocationKey;
     basename?: string;
   };
@@ -74,7 +73,7 @@ declare module 'history' {
   export namespace History {
     export type LocationDescriptor = LocationDescriptorObject | Path;
     export type LocationKey = string;
-    export type LocationListener = (location: Location) => void;
+    export type LocationListener = (location: Location, action: Action) => void;
     export type LocationState = Object;
     export type Path = string // Pathname + QueryString;
     export type Pathname = string;

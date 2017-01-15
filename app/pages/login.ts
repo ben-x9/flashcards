@@ -41,12 +41,15 @@ export const view = (state: State, update: Update<Goto|Action>) =>
   div(style(margin(10), vertical, verticallySpaced(10), center), [
     div(style(content), 'enter user name'),
     input({
-      props: {type: 'text'},
+      props: {type: 'text', value: state.inputText},
       on: {
         input: (e: Event) => update({
           type: 'SET_INPUT_TEXT',
           text: (e.target as HTMLInputElement).value,
         }),
+        keypress: (e: KeyboardEvent) => {
+          if (e.keyCode === 13) update(goto(userPath({name: state.inputText})));
+        },
       },
     }),
     button('submit', () => update(goto(userPath({name: state.inputText})))),
