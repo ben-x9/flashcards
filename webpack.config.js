@@ -4,7 +4,7 @@ var webpack = require('webpack');
 module.exports = {
 
   entry: {
-    index: ['./app/core/index'],
+    index: ['./app/core/setup'],
   },
   output: {
     publicPath: '/',
@@ -12,7 +12,9 @@ module.exports = {
   },
   externals: {
     'firebase': 'firebase',
-    'immutable': 'immutable'
+    'immutable': 'immutable',
+    'lodash': '_',
+    'jsondiffpatch': 'jsondiffpatch',
   },
   resolve: {
     extensions: ['', '.webpack.js', '.web.js', '.ts', '.js'],
@@ -31,6 +33,7 @@ module.exports = {
   },
   plugins: [
     new webpack.NoErrorsPlugin(),
+    new webpack.EnvironmentPlugin(['NODE_ENV'])
   ],
   devServer: {
     debug: true,

@@ -44,7 +44,7 @@
     ],
     "no-construct": true,
     "no-debugger": true,
-    "no-shadowed-variable": true,
+    "no-shadowed-variable": false,
     "no-duplicate-variable": true,
     "no-empty": true,
     "no-eval": true,
@@ -79,7 +79,7 @@
       true,
       "always"
     ],
-    "switch-default": true,
+    "switch-default": false,
     "triple-equals": [
       true,
       "allow-null-check"

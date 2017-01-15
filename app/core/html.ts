@@ -19,7 +19,11 @@ type A = VNodeData | string | Array<VNode>;
 type B = VNodeData | string | Array<VNode>;
 type C = string | Array<VNode>;
 
-export const div: HyperScriptFunc = (a?: any, b?: any, c?: any) =>
-  typeof a === 'string' && b !== undefined ?
-    h(`div.${a}`, b, c) :
-    h(`div`, a, b);
+export const tag = (tagName: string): HyperScriptFunc =>
+  (a?: any, b?: any, c?: any) =>
+    typeof a === 'string' && b !== undefined ?
+      h(`${tagName}.${a}`, b, c) :
+      h(tagName, a, b);
+
+export const div = tag('div');
+export const input = tag('input');

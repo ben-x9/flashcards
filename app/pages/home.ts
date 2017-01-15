@@ -1,12 +1,15 @@
 import { div } from 'core/html';
-import { Update } from 'core/frame';
+import { Update, Goto, goto } from 'core/common';
 import { style } from 'typestyle';
 import { vertical, verticallySpaced, center, content, margin } from 'csstips';
 import { view as button } from 'components/button';
-import { Action, goto } from 'core/router';
-import { loginPath } from 'routes';
+import { loginPath } from 'root';
 
-export const view = (update: Update<Action>) =>
+export type Action = Goto;
+
+export const update = (action: Action) => action;
+
+export const view = (update: Update<Goto>) =>
   div(style(margin(10), vertical, verticallySpaced(10), center), [
     div(style(content), 'hello world!'),
     button('login', () => update(goto(loginPath()))),
