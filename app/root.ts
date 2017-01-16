@@ -5,6 +5,7 @@ import * as NotFound from 'pages/not-found';
 import * as Home from 'pages/home';
 import * as Login from 'pages/login';
 import * as User from 'pages/user';
+import * as Card from 'components/card';
 
 if (module.hot) module.hot.dispose(() => reset());
 
@@ -61,18 +62,21 @@ export function update(action: Action): [Store, State, Effect] {
 
 type Path<Data extends Object> = (data: Data) => string;
 
-export const homePath = path('/', 'home');
-export const loginPath = path('/login', 'login');
-export const userPath: Path<{name: string}> = path('/user/:name', 'user');
+export const homePath = path('/', 'HOME');
+export const loginPath = path('/login', 'LOGIN');
+export const userPath: Path<{name: string}> = path('/user/:name', 'USER');
+
+export const cardPath = path('/card', 'CARD');
 
 export function view(path: string, update: (action: Action) => void) {
   const route = match(path);
   switch (route.key) {
-    case 'home': return Home.view((action: Home.Action) =>
+    case 'HOME': return Home.view((action: Home.Action) =>
       update({type: 'HOME', action}));
-    case 'login': return Login.view(state.login, (action: Home.Action) =>
+    case 'LOGIN': return Login.view(state.login, (action: Home.Action) =>
       update({type: 'LOGIN', action}));
-    case 'user': return User.view(route.args[0]);
+    case 'USER': return User.view(route.args[0]);
+    case 'CARD': return Card.view();
     default: return NotFound.view();
   }
 }

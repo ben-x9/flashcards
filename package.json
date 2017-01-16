@@ -31,6 +31,7 @@
     "lodash": "^4.17.4",
     "path-to-regexp": "^1.7.0",
     "snabbdom": "^0.6.1",
+    "textfit": "^2.3.1",
     "typestyle": "^0.22.1"
   }
 }
