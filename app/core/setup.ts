@@ -26,8 +26,8 @@ if (module.hot) {
 import * as Root from 'root';
 
 interface Global extends Window {
-  // expose the store and state globally so we can view in the console
-  store: Root.Store;
+  // expose the model and state globally so we can view in the console
+  model: Root.Model;
   state: Root.State;
   // make view a global because cannot `x = x || y` when x is a local
   view: VNode | HTMLElement;
@@ -54,20 +54,20 @@ import { create } from 'jsondiffpatch';
 const json = create();
 
 function update(action: Action) {
-  const [newStore, newState, effect] =
+  const [newModel, newState, effect] =
     action.type === 'POP' ?
-      [ Root.store,
+      [ Root.model,
         json.diff(Root.state, action.state) ? action.state : Root.state,
         null] :
       Root.update(action);
   if (process.env.NODE_ENV === 'development')
-    logAction(action, newStore, newState, effect);
-  const shouldRefresh = newStore !== Root.store || newState !== Root.state;
+    logAction(action, newModel, newState, effect);
+  const shouldRefresh = newModel !== Root.model || newState !== Root.state;
   if (action.type !== 'POP' && newState !== Root.state)
     history.replace(history.location.pathname, newState);
-  Root.updateModel(newStore, newState);
+  Root.updateModelAndState(newModel, newState);
   if (process.env.NODE_ENV === 'development') {
-    global.store = Root.store;
+    global.model = Root.model;
     global.state = Root.state;
   }
   if (effect && effect.type === 'GOTO') {
@@ -81,7 +81,7 @@ function update(action: Action) {
 import { Effect } from 'core/effects';
 import { omit } from 'lodash';
 
-function logAction(action: Action, store: Root.Store, state: Root.State, effect: Effect) {
+function logAction(action: Action, model: Root.Model, state: Root.State, effect: Effect) {
   let actionPath = action.type;
   let actualAction: any = action;
   while (actualAction.action) {
@@ -90,8 +90,8 @@ function logAction(action: Action, store: Root.Store, state: Root.State, effect:
   }
   actionPath += ' ' + JSON.stringify(omit(actualAction, 'type'));
   let msg = actionPath;
-  if (store !== Root.store)
-    msg += '\n-> store ' + JSON.stringify(json.diff(Root.store, store));
+  if (model !== Root.model)
+    msg += '\n-> model ' + JSON.stringify(json.diff(Root.model, model));
   if (state !== Root.state)
     msg += '\n-> state ' + JSON.stringify(json.diff(Root.state, state));
   if (effect)

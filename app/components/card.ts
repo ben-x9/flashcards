@@ -5,12 +5,12 @@ import { vertical, centerJustified } from 'csstips';
 import * as textfit from 'textfit';
 import { VNode } from 'snabbdom/src/VNode';
 
-export const initialStore = {
+export const initialModel = {
   front: '',
   back: '',
 };
 
-export type Store = Readonly<typeof initialStore>;
+export type Model = Readonly<typeof initialModel>;
 
 export const view = () =>
   div(

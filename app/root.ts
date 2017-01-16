@@ -12,17 +12,17 @@ if (module.hot) module.hot.dispose(() => reset());
 
 // MODEL
 
-export let store = {};
+export let model = {};
 
 export let state = {
   login: Login.initialState,
 };
 
-export type Store = Readonly<typeof store>;
+export type Model = Readonly<typeof model>;
 export type State = Readonly<typeof state>;
 
-export function updateModel(newStore: Store, newState: State) {
-  store = newStore;
+export function updateModelAndState(newModel: Model, newState: State) {
+  model = newModel;
   state = newState;
 }
 
@@ -40,8 +40,8 @@ interface LoginAction {
 
 export type Action = HomeAction | LoginAction;
 
-export function update(action: Action): [Store, State, Effect] {
-  let newStore: Store = store;
+export function update(action: Action): [Model, State, Effect] {
+  let newModel: Model = model;
   let newState: State = state;
   let effect: Effect = null;
   switch (action.type) {
@@ -54,7 +54,7 @@ export function update(action: Action): [Store, State, Effect] {
       newState = set(state, {login});
       break;
   }
-  return [newStore, newState, effect];
+  return [newModel, newState, effect];
 };
 
 

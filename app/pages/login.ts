@@ -7,7 +7,7 @@ import { view as button } from 'components/button';
 import { userPath } from 'root';
 
 
-// STORE
+// MODEL
 
 export const initialState = {
   inputText: '',
