@@ -37,7 +37,7 @@ export function update(state: State, action: Action): [State, Effect] {
 
 // VIEW
 
-export const view = (state: State, update: Update<Goto|Action>) =>
+export const view = (state: State, update: Update<Action>) =>
   div(style(margin(10), vertical, verticallySpaced(10), center), [
     div(style(content), 'enter user name'),
     input({
