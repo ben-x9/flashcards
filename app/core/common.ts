@@ -19,3 +19,8 @@ export function set<T extends Object>(object: T, props: Partial<T>): T {
   // https://github.com/Microsoft/TypeScript/issues/12759
   return unchanged ? object : <T>{...object as Object, ...props as any as Object};
 }
+
+interface ReadonlyArray<T> {
+  readonly length: number;
+  readonly [n: number]: T;
+}

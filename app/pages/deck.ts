@@ -11,7 +11,7 @@ export const model = {
     {front: '飲む', back: 'to drink'},
     {front: '寝る', back: 'to sleep'},
     {front: '起きる', back: 'to wake up'},
-  ] as Card.Model[],
+  ] as ReadonlyArray<Card.Model>,
 };
 export type Model = Readonly<typeof model>;
 
