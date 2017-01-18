@@ -24,6 +24,7 @@ if (module.hot) {
 }
 
 import * as Root from 'root';
+import { defer } from 'lodash';
 
 interface Global extends Window {
   // expose the model and state globally so we can view in the console
@@ -99,7 +100,7 @@ function logAction(action: Action, model: Root.Model, state: Root.State, effect:
   console.log(msg);
 }
 
-refreshView();
+defer(refreshView);
 unlisten = history.listen((location, action) => {
   if (action === 'POP') {
     update({

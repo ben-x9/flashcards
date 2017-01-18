@@ -4,7 +4,6 @@ import { black, white } from 'csx';
 import { vertical, centerJustified, width, height, padding } from 'csstips';
 import * as textfit from 'textfit';
 import { VNode } from 'snabbdom/VNode';
-import { defer } from 'lodash';
 
 export const initialModel = {
   front: '',
@@ -16,20 +15,20 @@ export const initialState = {
 export type Model = Readonly<typeof initialModel>;
 export type State = Readonly<typeof initialState>;
 
-export const view = () =>
-  div(
-    style(vertical, centerJustified, width(300), height(300), padding(15), {
-      backgroundColor: black.toString(),
-      color: white.toString(),
-      borderRadius: 5,
-      textAlign: 'center',
-    }),
-    {
-      hook: {
-        insert: (node: VNode) =>
-          defer(() => textfit(<Node>node.elm)),
-        postpatch: (oldNode: VNode, node: VNode) => textfit(<Node>node.elm),
-      },
-    },
-    '食べる',
-  );
+// `style` needs to be called in advance of `view` for the textfit function to work, which is why I haven't inlined this
+const viewStyle = style(
+  vertical,
+  centerJustified,
+  width(300),
+  height(300),
+  padding(15), {
+  backgroundColor: black.toString(),
+  color: white.toString(),
+  borderRadius: 5,
+  textAlign: 'center',
+});
+
+export const view = () => div(viewStyle, {hook: {
+  insert: (node: VNode) => textfit(<Node>node.elm),
+  postpatch: (oldNode: VNode, node: VNode) => textfit(<Node>node.elm),
+}}, '食べる');
