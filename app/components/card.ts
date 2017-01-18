@@ -3,7 +3,7 @@ import { style } from 'typestyle';
 import { black, white } from 'csx';
 import { vertical, centerJustified, width, height, padding } from 'csstips';
 import * as textfit from 'textfit';
-import { VNode } from 'snabbdom/src/VNode';
+import { VNode } from 'snabbdom/VNode';
 import { defer } from 'lodash';
 
 export const initialModel = {

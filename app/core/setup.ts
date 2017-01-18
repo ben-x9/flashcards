@@ -1,10 +1,10 @@
-import { init, h } from 'snabbdom/src/snabbdom';
-import { VNode } from 'snabbdom/src/VNode';
-import snabbClass from 'snabbdom/src/modules/class';
-import snabbProps from 'snabbdom/src/modules/props';
-import snabbStyle from 'snabbdom/src/modules/style';
-import snabbEvent from 'snabbdom/src/modules/eventlisteners';
-import snabbAttrs from 'snabbdom/src/modules/attributes';
+import { init, h } from 'snabbdom';
+import { VNode } from 'snabbdom/VNode';
+import snabbClass from 'snabbdom/modules/class';
+import snabbProps from 'snabbdom/modules/props';
+import snabbStyle from 'snabbdom/modules/style';
+import snabbEvent from 'snabbdom/modules/eventlisteners';
+import snabbAttrs from 'snabbdom/modules/attributes';
 const patch = init([ // init patch function with choosen modules
   snabbClass, // makes it easy to toggle classes
   snabbProps, // for setting properties on DOM elements

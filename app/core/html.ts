@@ -1,5 +1,5 @@
-import { h } from 'snabbdom/src/snabbdom';
-import { VNode, VNodeData } from 'snabbdom/src/vnode';
+import { h } from 'snabbdom';
+import { VNode, VNodeData } from 'snabbdom/vnode';
 
 interface HyperScriptFunc {
   (className: string, data: VNodeData): VNode;
