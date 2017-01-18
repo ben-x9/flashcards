@@ -1,7 +1,7 @@
 import { div } from 'core/html';
-import { style } from 'typestyle';
+import { style, types } from 'typestyle';
 import { black, white } from 'csx';
-import { vertical, centerJustified, width, height, padding } from 'csstips';
+import { vertical, content, centerJustified, width, height, padding } from 'csstips';
 import * as textfit from 'textfit';
 import { VNode } from 'snabbdom/VNode';
 
@@ -15,20 +15,44 @@ export type Model = Readonly<typeof model>;
 
 // VIEW
 
-// `style` needs to be called in advance of `view` for the textfit function to work, which is why I haven't inlined this
-const viewStyle = style(
+const cardHeight = 300;
+
+const baseStyle = [
   vertical,
   centerJustified,
   width(300),
-  height(300),
+  height(cardHeight),
   padding(15), {
   backgroundColor: black.toString(),
   color: white.toString(),
   borderRadius: 5,
   textAlign: 'center',
-});
+  transition: 'transform 1s',
+  backfaceVisibility: 'hidden',
+  }] as types.NestedCSSProperties[];
 
-export const view = (model: Model, flipped: boolean) => div(viewStyle, {hook: {
+const flippedStyle = [
+  {transform: 'rotateY(180deg)'},
+];
+
+const baseClass = style(...baseStyle);
+const flippedClass = style(...flippedStyle);
+
+const hook = {
   insert: (node: VNode) => textfit(<Node>node.elm),
   postpatch: (oldNode: VNode, node: VNode) => textfit(<Node>node.elm),
-}}, flipped ? model.back : model.front);
+};
+
+export const view = (model: Model, flipped: boolean) => div(
+  style(vertical, content), [
+  div(
+    [baseClass, flippedClass],
+    {class: {[flippedClass]: flipped}, hook},
+    model.front
+  ),
+  div(
+    [baseClass, flippedClass, style({marginTop: `-${cardHeight}px`})],
+    {class: {[flippedClass]: !flipped}, hook},
+    model.back
+  ),
+]);

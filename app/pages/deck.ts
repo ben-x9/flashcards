@@ -30,8 +30,8 @@ export const view = (model: Model, state: State) => div(
     verticallySpaced(10),
     centerCenter,
     width('100%'),
-    height('100%'),
-    {backgroundColor: '#ECEFF1'},
-  ),
+    height('100%'), {
+    backgroundColor: '#ECEFF1',
+  }),
   [Card.view(model.cards[state.currentCard], state.currentCardIsFlipped)]
 );

@@ -2,11 +2,11 @@ import { h } from 'snabbdom';
 import { VNode, VNodeData } from 'snabbdom/vnode';
 
 interface HyperScriptFunc {
-  (className: string, data: VNodeData): VNode;
-  (className: string, text: string): VNode;
-  (className: string, children: Array<VNode>): VNode;
-  (className: string, data: VNodeData, text: string): VNode;
-  (className: string, data: VNodeData, children: Array<VNode>): VNode;
+  (className: string | string[], data: VNodeData): VNode;
+  (className: string | string[], text: string): VNode;
+  (className: string | string[], children: Array<VNode>): VNode;
+  (className: string | string[], data: VNodeData, text: string): VNode;
+  (className: string | string[], data: VNodeData, children: Array<VNode>): VNode;
 
   (data: VNodeData): VNode;
   (text: string): VNode;
@@ -21,8 +21,8 @@ type C = string | Array<VNode>;
 
 export const tag = (tagName: string): HyperScriptFunc =>
   (a?: any, b?: any, c?: any) =>
-    typeof a === 'string' && b !== undefined ?
-      h(`${tagName}.${a}`, b, c) :
+    typeof (a === 'string' || Array.isArray(a)) && b !== undefined ?
+      h(`${tagName}.${Array.isArray(a) ? a.join('.') : a}`, b, c) :
       h(tagName, a, b);
 
 export const div = tag('div');
