@@ -54,22 +54,26 @@ type Action = Root.Action | GoBack;
 import { create } from 'jsondiffpatch';
 const json = create();
 
+let model = Root.model;
+let state = Root.state;
+
 function update(action: Action) {
   const [newModel, newState, effect] =
     action.type === 'POP' ?
-      [ Root.model,
-        json.diff(Root.state, action.state) ? action.state : Root.state,
+      [ model,
+        json.diff(state, action.state) ? action.state : state,
         null] :
-      Root.update(action);
+      Root.update(model, state, action);
   if (process.env.NODE_ENV === 'development')
     logAction(action, newModel, newState, effect);
-  const shouldRefresh = newModel !== Root.model || newState !== Root.state;
-  if (action.type !== 'POP' && newState !== Root.state)
+  const shouldRefresh = newModel !== model || newState !== state;
+  if (action.type !== 'POP' && newState !== state)
     history.replace(history.location.pathname, newState);
-  Root.updateModelAndState(newModel, newState);
+  model = newModel;
+  state = newState;
   if (process.env.NODE_ENV === 'development') {
-    global.model = Root.model;
-    global.state = Root.state;
+    global.model = model;
+    global.state = state;
   }
   if (effect && effect.type === 'GOTO') {
     history.push(effect.path, newState);
@@ -82,7 +86,7 @@ function update(action: Action) {
 import { Effect } from 'core/effects';
 import { omit } from 'lodash';
 
-function logAction(action: Action, model: Root.Model, state: Root.State, effect: Effect) {
+function logAction(action: Action, _model: Root.Model, _state: Root.State, effect: Effect) {
   let actionPath = action.type;
   let actualAction: any = action;
   while (actualAction.action) {
@@ -91,10 +95,10 @@ function logAction(action: Action, model: Root.Model, state: Root.State, effect:
   }
   actionPath += ' ' + JSON.stringify(omit(actualAction, 'type'));
   let msg = actionPath;
-  if (model !== Root.model)
-    msg += '\n-> model ' + JSON.stringify(json.diff(Root.model, model));
-  if (state !== Root.state)
-    msg += '\n-> state ' + JSON.stringify(json.diff(Root.state, state));
+  if (_model !== model)
+    msg += '\n-> model ' + JSON.stringify(json.diff(model, _model));
+  if (_state !== state)
+    msg += '\n-> state ' + JSON.stringify(json.diff(state, _state));
   if (effect)
     msg += '\n-> effect ' + JSON.stringify(effect);
   console.log(msg);
@@ -106,12 +110,12 @@ unlisten = history.listen((location, action) => {
     update({
       type: 'POP',
       path: location.pathname,
-      state: <Root.State>(location.state || Root.state),
+      state: <Root.State>(location.state || state),
     });
   }
 });
 
 function refreshView() {
   global.view = patch(global.view,
-    h('div#root', Root.view(history.location.pathname, update)));
+    h('div#root', Root.view(model, state, history.location.pathname, update)));
 }

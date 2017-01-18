@@ -12,21 +12,17 @@ if (module.hot) module.hot.dispose(() => reset());
 
 // MODEL
 
-export let model = {
+export const model = {
   deck: Deck.model,
 };
 export type Model = Readonly<typeof model>;
 
-export let state = {
+export const state = {
   login: Login.state,
   deck: Deck.state,
 };
 export type State = Readonly<typeof state>;
 
-export function updateModelAndState(newModel: Model, newState: State) {
-  model = newModel;
-  state = newState;
-}
 
 // UPDATE
 
@@ -42,7 +38,7 @@ interface LoginAction {
 
 export type Action = HomeAction | LoginAction;
 
-export function update(action: Action): [Model, State, Effect] {
+export function update(model: Model, state: State, action: Action): [Model, State, Effect] {
   let newModel: Model = model;
   let newState: State = state;
   let effect: Effect = null;
@@ -70,7 +66,7 @@ export const userPath: Path<{name: string}> = path('/user/:name', 'USER');
 
 export const deckPath = path('/deck', 'DECK');
 
-export function view(path: string, update: (action: Action) => void) {
+export function view(model: Model, state: State, path: string, update: (action: Action) => void) {
   const route = match(path);
   switch (route.key) {
     case 'HOME': return Home.view((action: Home.Action) =>
