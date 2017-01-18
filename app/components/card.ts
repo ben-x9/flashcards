@@ -5,15 +5,15 @@ import { vertical, centerJustified, width, height, padding } from 'csstips';
 import * as textfit from 'textfit';
 import { VNode } from 'snabbdom/VNode';
 
-export const initialModel = {
+// MODEL
+
+export const model = {
   front: '',
   back: '',
 };
-export const initialState = {
-  flipped: false,
-};
-export type Model = Readonly<typeof initialModel>;
-export type State = Readonly<typeof initialState>;
+export type Model = Readonly<typeof model>;
+
+// VIEW
 
 // `style` needs to be called in advance of `view` for the textfit function to work, which is why I haven't inlined this
 const viewStyle = style(
@@ -28,7 +28,7 @@ const viewStyle = style(
   textAlign: 'center',
 });
 
-export const view = () => div(viewStyle, {hook: {
+export const view = (model: Model, flipped: boolean) => div(viewStyle, {hook: {
   insert: (node: VNode) => textfit(<Node>node.elm),
   postpatch: (oldNode: VNode, node: VNode) => textfit(<Node>node.elm),
-}}, '食べる');
+}}, flipped ? model.back : model.front);

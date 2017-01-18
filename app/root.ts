@@ -5,20 +5,22 @@ import * as NotFound from 'pages/not-found';
 import * as Home from 'pages/home';
 import * as Login from 'pages/login';
 import * as User from 'pages/user';
-import * as Card from 'components/card';
+import * as Deck from 'pages/deck';
 
 if (module.hot) module.hot.dispose(() => reset());
 
 
 // MODEL
 
-export let model = {};
+export let model = {
+  deck: Deck.model,
+};
+export type Model = Readonly<typeof model>;
 
 export let state = {
-  login: Login.initialState,
+  login: Login.state,
+  deck: Deck.state,
 };
-
-export type Model = Readonly<typeof model>;
 export type State = Readonly<typeof state>;
 
 export function updateModelAndState(newModel: Model, newState: State) {
@@ -66,7 +68,7 @@ export const homePath = path('/', 'HOME');
 export const loginPath = path('/login', 'LOGIN');
 export const userPath: Path<{name: string}> = path('/user/:name', 'USER');
 
-export const cardPath = path('/card', 'CARD');
+export const deckPath = path('/deck', 'DECK');
 
 export function view(path: string, update: (action: Action) => void) {
   const route = match(path);
@@ -76,7 +78,7 @@ export function view(path: string, update: (action: Action) => void) {
     case 'LOGIN': return Login.view(state.login, (action: Home.Action) =>
       update({type: 'LOGIN', action}));
     case 'USER': return User.view(route.args[0]);
-    case 'CARD': return Card.view();
+    case 'DECK': return Deck.view(model.deck, state.deck);
     default: return NotFound.view();
   }
 }

@@ -9,11 +9,11 @@ import { userPath } from 'root';
 
 // MODEL
 
-export const initialState = {
+export const state = {
   inputText: '',
 };
 
-export type State = Readonly<typeof initialState>;
+export type State = Readonly<typeof state>;
 
 
 // UPDATE
