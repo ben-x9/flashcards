@@ -4,15 +4,15 @@ import { VNode, VNodeData } from 'snabbdom/vnode';
 interface HyperScriptFunc {
   (className: string | string[], data: VNodeData): VNode;
   (className: string | string[], text: string): VNode;
-  (className: string | string[], children: Array<VNode>): VNode;
+  (className: string | string[], children: VNode | Array<VNode>): VNode;
   (className: string | string[], data: VNodeData, text: string): VNode;
-  (className: string | string[], data: VNodeData, children: Array<VNode>): VNode;
+  (className: string | string[], data: VNodeData, children: VNode | Array<VNode>): VNode;
 
   (data: VNodeData): VNode;
   (text: string): VNode;
-  (children: Array<VNode>): VNode;
+  (children: VNode | Array<VNode>): VNode;
   (data: VNodeData, text: string): VNode;
-  (data: VNodeData, children: Array<VNode>): VNode;
+  (data: VNodeData, children: VNode | Array<VNode>): VNode;
 }
 
 type A = VNodeData | string | Array<VNode>;

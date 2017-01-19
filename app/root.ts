@@ -6,6 +6,8 @@ import * as Home from 'pages/home';
 import * as Login from 'pages/login';
 import * as User from 'pages/user';
 import * as Deck from 'pages/deck';
+import * as List from 'pages/list';
+import { lightGray } from 'colors';
 
 if (module.hot) module.hot.dispose(() => reset());
 
@@ -58,6 +60,8 @@ export function update(model: Model, state: State, action: Action): [Model, Stat
 
 // VIEW
 
+document.body.style.backgroundColor = lightGray;
+
 type Path<Data extends Object> = (data: Data) => string;
 
 export const homePath = path('/', 'HOME');
@@ -65,6 +69,7 @@ export const loginPath = path('/login', 'LOGIN');
 export const userPath: Path<{name: string}> = path('/user/:name', 'USER');
 
 export const deckPath = path('/deck', 'DECK');
+export const listPath = path('/list', 'LIST');
 
 export function view(model: Model, state: State, path: string, update: (action: Action) => void) {
   const route = match(path);
@@ -75,6 +80,7 @@ export function view(model: Model, state: State, path: string, update: (action: 
       update({type: 'LOGIN', action}));
     case 'USER': return User.view(route.args[0]);
     case 'DECK': return Deck.view(model.deck, state.deck);
+    case 'LIST': return List.view(model.deck);
     default: return NotFound.view();
   }
 }
