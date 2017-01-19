@@ -15,9 +15,9 @@ const cardClass = style(
   borderRadius: '3px',
 });
 
-export const view = (model: Model, flipped: boolean, gap: number) =>
+export const view = (model: Model, flipped: boolean, gap: number, onclick: () => void) =>
   Flippable.vert(
-    div(cardClass, model.front),
-    div([cardClass, style({right: gap, left: gap})], model.back),
+    div(cardClass, {on: {click: onclick}}, model.front),
+    div([cardClass, style({right: gap, left: gap})], {on: {click: onclick}}, model.back),
     flipped,
   );

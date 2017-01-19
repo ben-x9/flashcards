@@ -22,6 +22,7 @@ export type Model = Readonly<typeof model>;
 export const state = {
   login: Login.state,
   deck: Deck.state,
+  list: List.state,
 };
 export type State = Readonly<typeof state>;
 
@@ -38,7 +39,12 @@ interface LoginAction {
   action: Login.Action;
 }
 
-export type Action = HomeAction | LoginAction;
+interface ListAction {
+  type: 'LIST';
+  action: List.Action;
+}
+
+export type Action = HomeAction | LoginAction | ListAction;
 
 export function update(model: Model, state: State, action: Action): [Model, State, Effect] {
   let newModel: Model = model;
@@ -52,6 +58,10 @@ export function update(model: Model, state: State, action: Action): [Model, Stat
       let login: Login.State;
       [login, effect] = Login.update(state.login, action.action);
       newState = set(state, {login});
+      break;
+    case 'LIST':
+      let listState = List.update(state.list, action.action);
+      newState = set(state, {list: listState});
       break;
   }
   return [newModel, newState, effect];
@@ -80,7 +90,9 @@ export function view(model: Model, state: State, path: string, update: (action: 
       update({type: 'LOGIN', action}));
     case 'USER': return User.view(route.args[0]);
     case 'DECK': return Deck.view(model.deck, state.deck);
-    case 'LIST': return List.view(model.deck);
+    case 'LIST':
+      return List.view(model.deck, state.list, (action: List.Action) =>
+        update({type: 'LIST', action}));
     default: return NotFound.view();
   }
 }
