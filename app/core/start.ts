@@ -54,7 +54,9 @@ type Action = Root.Action | GoBack;
 import { create } from 'jsondiffpatch';
 const json = create();
 
-let model = Root.model;
+import * as Mock from 'mock-data';
+
+let model = Mock.model; // Root.model;
 let state = Root.state;
 
 function update(action: Action) {

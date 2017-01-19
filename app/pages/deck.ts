@@ -5,19 +5,12 @@ import * as Card from 'components/card';
 
 // MODEL
 
-export const model = {
-  cards: [
-    {front: '食べる', back: 'to eat'},
-    {front: '飲む', back: 'to drink'},
-    {front: '寝る', back: 'to sleep'},
-    {front: '起きる', back: 'to wake up'},
-  ] as ReadonlyArray<Card.Model>,
-};
-export type Model = Readonly<typeof model>;
+export const model = [] as ReadonlyArray<Card.Model>;
+export type Model = typeof model;
 
 export const state = {
   currentCard: 0,
-  currentCardIsFlipped: true,
+  currentCardIsFlipped: false,
 };
 export type State = Readonly<typeof state>;
 
@@ -33,5 +26,5 @@ export const view = (model: Model, state: State) => div(
     height('100%'), {
     backgroundColor: '#ECEFF1',
   }),
-  [Card.view(model.cards[state.currentCard], state.currentCardIsFlipped)]
+  [Card.view(model[state.currentCard], state.currentCardIsFlipped)]
 );
