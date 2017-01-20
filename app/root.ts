@@ -44,7 +44,12 @@ interface ListAction {
   action: List.Action;
 }
 
-export type Action = HomeAction | LoginAction | ListAction;
+interface DeckAction {
+  type: 'DECK';
+  action: Deck.Action;
+}
+
+export type Action = HomeAction | LoginAction | DeckAction | ListAction;
 
 export function update(model: Model, state: State, action: Action): [Model, State, Effect] {
   let newModel: Model = model;
@@ -62,6 +67,10 @@ export function update(model: Model, state: State, action: Action): [Model, Stat
     case 'LIST':
       let listState = List.update(state.list, action.action);
       newState = set(state, {list: listState});
+      break;
+    case 'DECK':
+      let deckState = Deck.update(state.deck, action.action);
+      newState = set(state, {deck: deckState});
       break;
   }
   return [newModel, newState, effect];
@@ -84,12 +93,17 @@ export const listPath = path('/list', 'LIST');
 export function view(model: Model, state: State, path: string, update: (action: Action) => void) {
   const route = match(path);
   switch (route.key) {
-    case 'HOME': return Home.view((action: Home.Action) =>
-      update({type: 'HOME', action}));
-    case 'LOGIN': return Login.view(state.login, (action: Home.Action) =>
-      update({type: 'LOGIN', action}));
-    case 'USER': return User.view(route.args[0]);
-    case 'DECK': return Deck.view(model.deck, state.deck);
+    case 'HOME':
+      return Home.view((action: Home.Action) =>
+        update({type: 'HOME', action}));
+    case 'LOGIN':
+      return Login.view(state.login, (action: Home.Action) =>
+        update({type: 'LOGIN', action}));
+    case 'USER':
+      return User.view(route.args[0]);
+    case 'DECK':
+      return Deck.view(model.deck, state.deck, (action: Deck.Action) =>
+        update({type: 'DECK', action}));
     case 'LIST':
       return List.view(model.deck, state.list, (action: List.Action) =>
         update({type: 'LIST', action}));
