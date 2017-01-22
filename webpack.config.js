@@ -37,6 +37,7 @@ module.exports = {
   ],
   devServer: {
     debug: true,
-    devtool: 'cheap-module-eval-source-map'
+    devtool: 'cheap-module-eval-source-map',
+    host: '0.0.0.0',
   }
 };

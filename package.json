@@ -4,7 +4,7 @@
   "description": "a flashcard app for language learning",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development && webpack-dev-server --content-base app/core --history-api-fallback --progress --inline --hot --host 0.0.0.0 --debug --devtool cheap-module-eval-source-map --output-pathinfo",
+    "start": "NODE_ENV=development && webpack-dev-server --content-base app/core --history-api-fallback --progress --inline --hot --debug --devtool cheap-module-eval-source-map --output-pathinfo",
     "test": "mocha-webpack test/**/*.ts",
     "test:watch": "npm run test -- --watch",
     "build": "NODE_ENV=production && webpack --optimize-minimize && mkdir -p build/ && mv bundle.js build/ && cp app/core/index.html build/"
