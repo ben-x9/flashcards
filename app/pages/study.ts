@@ -55,8 +55,9 @@ export const update = (cards: Store, state: State, action: Action): [Store, Stat
 // VIEW
 
 export const view = (store: Store, state: State, update: Update<Action>) => div(
+  {name: 'study'},
   style(vertical, width('100%'), height('100%')), [
-    div(
+    div({name: 'body'},
       style(
         padding(10),
         vertical,
@@ -67,7 +68,8 @@ export const view = (store: Store, state: State, update: Update<Action>) => div(
       {on: {click: () => update({type: 'FLIP'})}},
       Card.view(store[state.currentCard], state.flipped),
     ),
-    div(style(horizontal, horizontallySpaced(3), padding(3)), [
+    div({name: 'button-bar'},
+      style(horizontal, horizontallySpaced(3), padding(3)), [
       Button.view('NG', [flex], () => update({type: 'MARK', correct: false})),
       Button.view('OK', [flex], () => update({type: 'MARK', correct: true})),
     ]),

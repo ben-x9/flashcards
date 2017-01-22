@@ -14,8 +14,8 @@ const overlap = style({position: 'absolute'});
 const flipHorizClass = style({transform: 'rotateY(180deg)'});
 const flipVertClass = style({transform: 'rotateX(180deg)'});
 
-const view = (flipClass: string, flipped: boolean, front: VNode, back: VNode) =>
-  div(style(vertical, content), [
+const view = (name: string, flipClass: string, flipped: boolean, front: VNode, back: VNode) =>
+  div({name}, style(vertical, content), [
     set(front, {
       sel: `${front.sel}.${baseClass}.${flipClass}`,
       data: set(front.data || {}, {
@@ -30,8 +30,8 @@ const view = (flipClass: string, flipped: boolean, front: VNode, back: VNode) =>
     }),
   ]);
 
-export const vert = (front: VNode, back: VNode, flipped: boolean) =>
-  view(flipVertClass, flipped, front, back);
+export const vert = (name: string, front: VNode, back: VNode, flipped: boolean) =>
+  view(name, flipVertClass, flipped, front, back);
 
-export const horiz = (front: VNode, back: VNode, flipped: boolean) =>
-  view(flipHorizClass, flipped, front, back);
+export const horiz = (name: string, front: VNode, back: VNode, flipped: boolean) =>
+  view(name, flipHorizClass, flipped, front, back);

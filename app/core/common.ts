@@ -25,3 +25,5 @@ export function setIndex<T>(array: ReadonlyArray<T>, index: number, value: T): R
   copy[index] = value;
   return copy;
 }
+
+export const isObject = (x: any) => typeof x === 'object' && !Array.isArray(x);

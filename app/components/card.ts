@@ -46,8 +46,8 @@ const hook = {
 };
 
 export const view = (store: Store, flipped: boolean) =>
-  Flippable.horiz(
-    div(cardStyle, {hook}, store.front),
-    div(cardStyle, {hook}, store.back),
+  Flippable.horiz('card',
+    div({name: 'front_face'}, cardStyle, {hook}, store.front),
+    div({name: 'back_face'}, cardStyle, {hook}, store.back),
     flipped,
   );
