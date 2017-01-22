@@ -21,7 +21,7 @@ export function set<T extends Object>(object: T, props: Partial<T>): T {
 }
 
 export function setIndex<T>(array: ReadonlyArray<T>, index: number, value: T): ReadonlyArray<T> {
-  const copy = (array as T[]).slice();
+  const copy = array.slice() as T[];
   copy[index] = value;
   return copy;
 }
