@@ -21,9 +21,13 @@ export function set<T extends Object>(object: T, props: Partial<T>): T {
 }
 
 export function setIndex<T>(array: ReadonlyArray<T>, index: number, value: T): ReadonlyArray<T> {
-  const copy = array.slice() as T[];
-  copy[index] = value;
-  return copy;
+  if (array[index] === value) {
+    return array;
+  } else {
+    const copy = array.slice() as T[];
+    copy[index] = value;
+    return copy;
+  }
 }
 
 export const isObject = (x: any) => typeof x === 'object' && !Array.isArray(x);
