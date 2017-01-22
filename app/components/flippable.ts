@@ -19,19 +19,19 @@ const view = (name: string, flipClass: string, flipped: boolean, front: VNode, b
     set(front, {
       sel: `${front.sel}.${baseClass}.${flipClass}`,
       data: set(front.data || {}, {
-        class: set((front.data || {}), {[flipClass]: flipped}),
+        class: set((front.data || {}).class || {}, {[flipClass]: flipped}),
       }),
     }),
     set(back, {
       sel: `${back.sel}.${baseClass}.${flipClass}.${overlap}`,
       data: set(back.data || {}, {
-        class: set((back.data || {}), {[flipClass]: !flipped}),
+        class: set((back.data || {}).class || {}, {[flipClass]: !flipped}),
       }),
     }),
   ]);
 
-export const vert = (name: string, front: VNode, back: VNode, flipped: boolean) =>
+export const vert = (name: string, flipped: boolean, front: VNode, back: VNode) =>
   view(name, flipVertClass, flipped, front, back);
 
-export const horiz = (name: string, front: VNode, back: VNode, flipped: boolean) =>
+export const horiz = (name: string, flipped: boolean, front: VNode, back: VNode) =>
   view(name, flipHorizClass, flipped, front, back);
