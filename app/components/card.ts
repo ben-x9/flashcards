@@ -6,6 +6,7 @@ import * as textfit from 'textfit';
 import { VNode } from 'snabbdom/VNode';
 import * as Flippable from 'components/flippable';
 import { set } from 'core/common';
+import { noselect } from 'styles';
 
 // MODEL
 
@@ -47,7 +48,7 @@ const hook = {
 
 export const view = (store: Store, flipped: boolean) =>
   Flippable.horiz('card',
-    div({name: 'front_face'}, cardStyle, {hook}, store.front),
-    div({name: 'back_face'}, cardStyle, {hook}, store.back),
     flipped,
+    div({name: 'front_face'}, [cardStyle, noselect], {hook}, store.front),
+    div({name: 'back_face'}, [cardStyle, noselect], {hook}, store.back),
   );
