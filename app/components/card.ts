@@ -3,8 +3,8 @@ import { style } from 'typestyle';
 import { black, white } from 'csx';
 import { vertical, centerJustified, width, height, padding } from 'csstips';
 import * as textfit from 'textfit';
-import { VNode } from 'snabbdom/VNode';
-import * as Flippable from 'components/flippable';
+import { VNode, VNodeData } from 'snabbdom/VNode';
+import flippable from 'components/flippable';
 import { set } from 'core/common';
 import { noselect } from 'styles';
 
@@ -46,10 +46,12 @@ const hook = {
   postpatch: (oldNode: VNode, node: VNode) => textfit(<Node>node.elm),
 };
 
-export const view = (store: Store, flipped: boolean) =>
-  Flippable.horiz('card',
+export const view = (store: Store, flipped: boolean, styles: string[] = [], data: VNodeData = {}) =>
+  flippable('card',
+    'horiz',
     flipped,
-    noselect,
     div({name: 'front_face'}, faceStyle, {hook}, store.front),
     div({name: 'back_face'}, faceStyle, {hook}, store.back),
+    styles.concat(noselect),
+    data,
   );

@@ -1,5 +1,5 @@
 import { div } from 'core/html';
-import { style } from 'typestyle';
+import { style, keyframes } from 'typestyle';
 import { vertical, verticallySpaced, horizontal, horizontallySpaced, centerCenter, padding, width, height, flex } from 'csstips';
 import * as Card from 'components/card';
 import { set, setIndex, Update } from 'core/common';
@@ -13,6 +13,8 @@ export type Store = typeof newStore;
 export const newState = {
   currentCard: 0,
   flipped: false,
+  ok: false,
+  ng: false,
 };
 export type State = Readonly<typeof newState>;
 
@@ -27,7 +29,11 @@ interface Mark {
   correct: boolean;
 }
 
-export type Action = Flip | Mark;
+interface Advance {
+  type: 'ADVANCE';
+}
+
+export type Action = Flip | Mark | Advance;
 
 export const update = (cards: Store, state: State, action: Action): [Store, State] => {
   switch (action.type) {
@@ -40,21 +46,64 @@ export const update = (cards: Store, state: State, action: Action): [Store, Stat
       const newCard = set(oldCard, {
         score: action.correct ? oldCard.score + 1 : 0,
       });
-      const currentCard = state.currentCard;
-      const nextCard = currentCard === cards.length - 1 ? 0 : currentCard + 1;
       return [
         setIndex(cards, state.currentCard, newCard),
         set(state, {
-          currentCard: nextCard,
+          ok: action.correct,
+          ng: !action.correct,
           flipped: false,
         }),
       ];
+    case 'ADVANCE':
+      return [
+        cards,
+        set(state, {
+          currentCard: nextCard(cards, state),
+          flipped: false,
+          ok: false,
+          ng: false,
+        }),
+      ]
   }
 };
 
 // VIEW
 
-export const view = (store: Store, state: State, update: Update<Action>) => div(
+const abs = style({
+  position: 'absolute',
+});
+const invisible = style({
+  visibility: 'hidden',
+});
+const slideRight = keyframes({
+  'to': {
+    transform: 'rotateZ(30deg)',
+    marginLeft: '120%',
+    marginTop: '100px',
+   },
+});
+const slideLeft = keyframes({
+  'to': {
+    transform: 'rotateZ(-30deg)',
+    marginLeft: '-120%',
+    marginTop: '100px',
+   },
+});
+const ok = style({
+  animationName: slideRight,
+  animationDuration: '0.3s',
+  animationTimingFunction: 'ease',
+});
+const ng = style({
+  animationName: slideLeft,
+  animationDuration: '0.3s',
+  animationTimingFunction: 'ease',
+});
+
+const nextCard = (cards: Store, state: State) =>
+  state.currentCard === cards.length - 1 ? 0 : state.currentCard + 1
+
+export const view = (cards: Store, state: State, update: Update<Action>) => div(
   {name: 'study'},
   style(vertical, width('100%'), height('100%')), [
     div({name: 'body'},
@@ -64,10 +113,19 @@ export const view = (store: Store, state: State, update: Update<Action>) => div(
         verticallySpaced(10),
         centerCenter,
         width('100%'),
-        height('100%')),
-      {on: {click: () => update({type: 'FLIP'})}},
-      Card.view(store[state.currentCard], state.flipped),
-    ),
+        height('100%'),
+        {overflow: 'hidden'}),
+      {on: {click: () => update({type: 'FLIP'})}}, [
+        Card.view(cards[nextCard(cards, state)], false, [abs, invisible], {
+          class: {[invisible]: !state.ok && !state.ng},
+        }),
+        Card.view(cards[state.currentCard], state.flipped, [abs, ok, ng], {
+          on: {animationend: (e: AnimationEvent) =>
+            (e.animationName === slideRight || e.animationName === slideLeft) &&
+              update({type: 'ADVANCE'})},
+          class: {[ok]: state.ok, [ng]: state.ng},
+        }),
+    ]),
     div({name: 'button-bar'},
       style(horizontal, horizontallySpaced(3), padding(3)), [
       Button.view('NG', [flex], () => update({type: 'MARK', correct: false})),

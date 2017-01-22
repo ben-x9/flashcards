@@ -1,24 +1,25 @@
 import { div } from 'core/html';
 import { style } from 'typestyle';
 import { vertical, content } from 'csstips';
-import { VNode } from 'snabbdom/VNode';
+import { VNode, VNodeData } from 'snabbdom/VNode';
 import { set } from 'core/common';
 
 const baseClass = style({
-  transition: 'transform 0.5s',
+  transition: 'transform 0.3s linear',
   backfaceVisibility: 'hidden',
 });
 
-const overlap = style({position: 'absolute'});
+const abs = style({position: 'absolute'});
 
 const flipHorizClass = style({transform: 'rotateY(180deg)'});
 const flipVertClass = style({transform: 'rotateX(180deg)'});
 
-const view = (name: string, flipClass: string, flipped: boolean, styleClass: string | string[], front: VNode, back: VNode) =>
-  div({name}, [
+export default (name: string, direction: 'horiz' | 'vert', flipped: boolean, front: VNode, back: VNode, styleClass: string | string[], data: VNodeData = {}) => {
+  const flipClass = direction === 'horiz' ? flipHorizClass : flipVertClass;
+  return div({name}, [
       style(vertical, content),
       ...(Array.isArray(styleClass) ? styleClass : [styleClass]),
-    ], [
+    ], data, [
       set(front, {
         sel: `${front.sel}.${baseClass}.${flipClass}`,
         data: set(front.data || {}, {
@@ -26,15 +27,10 @@ const view = (name: string, flipClass: string, flipped: boolean, styleClass: str
         }),
       }),
       set(back, {
-        sel: `${back.sel}.${baseClass}.${flipClass}.${overlap}`,
+        sel: `${back.sel}.${baseClass}.${flipClass}.${abs}`,
         data: set(back.data || {}, {
           class: set((back.data || {}).class || {}, {[flipClass]: !flipped}),
         }),
       }),
   ]);
-
-export const vert = (name: string, flipped: boolean, styleClass: string|string[], front: VNode, back: VNode) =>
-  view(name, flipVertClass, flipped, styleClass, front, back);
-
-export const horiz = (name: string, flipped: boolean, style: string|string[], front: VNode, back: VNode) =>
-  view(name, flipHorizClass, flipped, style, front, back);
+};
