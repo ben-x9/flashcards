@@ -1,10 +1,11 @@
-import { Model } from 'root';
+import { Store } from 'root';
+import { newStore as card } from 'components/card';
 
-export const model: Model = {
-  deck: [
-    {front: '食べ', back: 'to eat'},
-    {front: '飲む', back: 'to drink'},
-    {front: '寝る', back: 'to sleep'},
-    {front: '起きる', back: 'to wake up'},
+export const store: Store = {
+  cards: [
+    card({front: '食べる', back: 'to eat'}),
+    card({front: '飲む', back: 'to drink'}),
+    card({front: '寝る', back: 'to sleep'}),
+    card({front: '起きる', back: 'to wake up'}),
   ],
 };

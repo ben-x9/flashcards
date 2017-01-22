@@ -6,13 +6,13 @@ import { set, Update } from 'core/common';
 
 // MODEL
 
-export const model = [] as ReadonlyArray<ListItem.Model>;
-export type Model = typeof model;
+export const newStore = [] as ReadonlyArray<ListItem.Store>;
+export type Store = typeof newStore;
 
-export const state = {
+export const newState = {
   flippedItem: null as number | null,
 };
-export type State = typeof state;
+export type State = typeof newState;
 
 // UPDATE
 
@@ -36,13 +36,13 @@ export const update = (state: State, action: Action): State => {
 
 const gap = 2;
 
-export const view = (model: Model, state: State, update: Update<Action>) => div(
+export const view = (store: Store, state: State, update: Update<Action>) => div(
   style(
     vertical,
     padding(gap),
     verticallySpaced(gap),
   ),
-  model.map((item, i) =>
+  store.slice().reverse().map((item, i) =>
     ListItem.view(item, i === state.flippedItem, gap, () =>
       update({type: 'FLIP', index: i}),
     ),

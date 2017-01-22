@@ -1,18 +1,29 @@
 import { div } from 'core/html';
 import { style } from 'typestyle';
 import { black, white } from 'csx';
-import { vertical, content, centerJustified, width, height, padding } from 'csstips';
+import { vertical, centerJustified, width, height, padding } from 'csstips';
 import * as textfit from 'textfit';
 import { VNode } from 'snabbdom/VNode';
 import * as Flippable from 'components/flippable';
+import { set } from 'core/common';
 
 // MODEL
 
-export const model = {
-  front: '',
-  back: '',
-};
-export type Model = Readonly<typeof model>;
+export const newStore = (props: Partial<Card>): Card =>
+  set({
+    front: '',
+    back: '',
+    score: 0,
+    showNext: new Date(),
+  } as Card, props);
+
+interface Card {
+  front: string;
+  back: string;
+  score: number;
+  showNext: Date;
+}
+export type Store = Readonly<Card>;
 
 // VIEW
 
@@ -34,9 +45,9 @@ const hook = {
   postpatch: (oldNode: VNode, node: VNode) => textfit(<Node>node.elm),
 };
 
-export const view = (model: Model, flipped: boolean) =>
+export const view = (store: Store, flipped: boolean) =>
   Flippable.horiz(
-    div(cardStyle, {hook}, model.front),
-    div(cardStyle, {hook}, model.back),
+    div(cardStyle, {hook}, store.front),
+    div(cardStyle, {hook}, store.back),
     flipped,
   );

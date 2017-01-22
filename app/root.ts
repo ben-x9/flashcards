@@ -5,7 +5,7 @@ import * as NotFound from 'pages/not-found';
 import * as Home from 'pages/home';
 import * as Login from 'pages/login';
 import * as User from 'pages/user';
-import * as Deck from 'pages/deck';
+import * as Study from 'pages/study';
 import * as List from 'pages/list';
 import { lightGray } from 'colors';
 
@@ -14,15 +14,15 @@ if (module.hot) module.hot.dispose(() => reset());
 
 // MODEL
 
-export const model = {
-  deck: Deck.model,
+export const newStore = {
+  cards: Study.newStore,
 };
-export type Model = Readonly<typeof model>;
+export type Store = Readonly<typeof newStore>;
 
 export const state = {
   login: Login.state,
-  deck: Deck.state,
-  list: List.state,
+  study: Study.newState,
+  list: List.newState,
 };
 export type State = Readonly<typeof state>;
 
@@ -45,14 +45,14 @@ interface ListAction {
 }
 
 interface DeckAction {
-  type: 'DECK';
-  action: Deck.Action;
+  type: 'STUDY';
+  action: Study.Action;
 }
 
 export type Action = HomeAction | LoginAction | DeckAction | ListAction;
 
-export function update(model: Model, state: State, action: Action): [Model, State, Effect] {
-  let newModel: Model = model;
+export function update(model: Store, state: State, action: Action): [Store, State, Effect] {
+  let newModel: Store = model;
   let newState: State = state;
   let effect: Effect = null;
   switch (action.type) {
@@ -68,9 +68,10 @@ export function update(model: Model, state: State, action: Action): [Model, Stat
       let listState = List.update(state.list, action.action);
       newState = set(state, {list: listState});
       break;
-    case 'DECK':
-      let deckState = Deck.update(state.deck, action.action);
-      newState = set(state, {deck: deckState});
+    case 'STUDY':
+      let [cards, studyState] = Study.update(model.cards, state.study, action.action);
+      newModel = set(model, {cards});
+      newState = set(state, {study: studyState});
       break;
   }
   return [newModel, newState, effect];
@@ -87,10 +88,10 @@ export const homePath = path('/', 'HOME');
 export const loginPath = path('/login', 'LOGIN');
 export const userPath: Path<{name: string}> = path('/user/:name', 'USER');
 
-export const deckPath = path('/deck', 'DECK');
+export const studyPath = path('/study', 'STUDY');
 export const listPath = path('/list', 'LIST');
 
-export function view(model: Model, state: State, path: string, update: (action: Action) => void) {
+export function view(store: Store, state: State, path: string, update: (action: Action) => void) {
   const route = match(path);
   switch (route.key) {
     case 'HOME':
@@ -101,11 +102,11 @@ export function view(model: Model, state: State, path: string, update: (action: 
         update({type: 'LOGIN', action}));
     case 'USER':
       return User.view(route.args[0]);
-    case 'DECK':
-      return Deck.view(model.deck, state.deck, (action: Deck.Action) =>
-        update({type: 'DECK', action}));
+    case 'STUDY':
+      return Study.view(store.cards, state.study, (action: Study.Action) =>
+        update({type: 'STUDY', action}));
     case 'LIST':
-      return List.view(model.deck, state.list, (action: List.Action) =>
+      return List.view(store.cards, state.list, (action: List.Action) =>
         update({type: 'LIST', action}));
     default: return NotFound.view();
   }

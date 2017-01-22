@@ -28,7 +28,7 @@ import { defer } from 'lodash';
 
 interface Global extends Window {
   // expose the model and state globally so we can view in the console
-  model: Root.Model;
+  store: Root.Store;
   state: Root.State;
   // make view a global because cannot `x = x || y` when x is a local
   view: VNode | HTMLElement;
@@ -56,25 +56,25 @@ const json = create();
 
 import * as Mock from 'mock-data';
 
-let model = Mock.model; // Root.model;
+let store = Mock.store;
 let state = Root.state;
 
 function update(action: Action) {
-  const [newModel, newState, effect] =
+  const [newStore, newState, effect] =
     action.type === 'POP' ?
-      [ model,
+      [ store,
         json.diff(state, action.state) ? action.state : state,
         null] :
-      Root.update(model, state, action);
+      Root.update(store, state, action);
   if (process.env.NODE_ENV === 'development')
-    logAction(action, newModel, newState, effect);
-  const shouldRefresh = newModel !== model || newState !== state;
+    logAction(action, newStore, newState, effect);
+  const shouldRefresh = newStore !== store || newState !== state;
   if (action.type !== 'POP' && newState !== state)
     history.replace(history.location.pathname, newState);
-  model = newModel;
+  store = newStore;
   state = newState;
   if (process.env.NODE_ENV === 'development') {
-    global.model = model;
+    global.store = store;
     global.state = state;
   }
   if (effect && effect.type === 'GOTO') {
@@ -88,7 +88,7 @@ function update(action: Action) {
 import { Effect } from 'core/effects';
 import { omit } from 'lodash';
 
-function logAction(action: Action, _model: Root.Model, _state: Root.State, effect: Effect) {
+function logAction(action: Action, _model: Root.Store, _state: Root.State, effect: Effect) {
   let actionPath = action.type;
   let actualAction: any = action;
   while (actualAction.action) {
@@ -97,8 +97,8 @@ function logAction(action: Action, _model: Root.Model, _state: Root.State, effec
   }
   actionPath += ' ' + JSON.stringify(omit(actualAction, 'type'));
   let msg = actionPath;
-  if (_model !== model)
-    msg += '\n-> model ' + JSON.stringify(json.diff(model, _model));
+  if (_model !== store)
+    msg += '\n-> model ' + JSON.stringify(json.diff(store, _model));
   if (_state !== state)
     msg += '\n-> state ' + JSON.stringify(json.diff(state, _state));
   if (effect)
@@ -119,5 +119,5 @@ unlisten = history.listen((location, action) => {
 
 function refreshView() {
   global.view = patch(global.view,
-    h('div#root', Root.view(model, state, history.location.pathname, update)));
+    h('div#root', Root.view(store, state, history.location.pathname, update)));
 }

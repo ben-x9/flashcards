@@ -20,7 +20,8 @@ export function set<T extends Object>(object: T, props: Partial<T>): T {
   return unchanged ? object : <T>{...object as Object, ...props as any as Object};
 }
 
-export interface ReadonlyArray<T> {
-  readonly length: number;
-  readonly [n: number]: T;
+export function setIndex<T>(array: ReadonlyArray<T>, index: number, value: T): ReadonlyArray<T> {
+  const copy = (array as T[]).slice();
+  copy[index] = value;
+  return copy;
 }
