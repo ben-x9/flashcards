@@ -88,7 +88,7 @@ function update(action: Action) {
 import { Effect } from 'core/effects';
 import { omit } from 'lodash';
 
-function logAction(action: Action, _model: Root.Store, _state: Root.State, effect: Effect) {
+function logAction(action: Action, _store: Root.Store, _state: Root.State, effect: Effect) {
   let actionPath = action.type;
   let actualAction: any = action;
   while (actualAction.action) {
@@ -97,8 +97,8 @@ function logAction(action: Action, _model: Root.Store, _state: Root.State, effec
   }
   actionPath += ' ' + JSON.stringify(omit(actualAction, 'type'));
   let msg = actionPath;
-  if (_model !== store)
-    msg += '\n-> model ' + JSON.stringify(json.diff(store, _model));
+  if (_store !== store)
+    msg += '\n-> store ' + JSON.stringify(json.diff(store, _store));
   if (_state !== state)
     msg += '\n-> state ' + JSON.stringify(json.diff(state, _state));
   if (effect)
