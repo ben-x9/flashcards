@@ -28,7 +28,7 @@ export type Store = Readonly<Card>;
 
 // VIEW
 
-const cardStyle = style(
+const faceStyle = style(
   vertical,
   centerJustified,
   width(300),
@@ -49,6 +49,7 @@ const hook = {
 export const view = (store: Store, flipped: boolean) =>
   Flippable.horiz('card',
     flipped,
-    div({name: 'front_face'}, [cardStyle, noselect], {hook}, store.front),
-    div({name: 'back_face'}, [cardStyle, noselect], {hook}, store.back),
+    noselect,
+    div({name: 'front_face'}, faceStyle, {hook}, store.front),
+    div({name: 'back_face'}, faceStyle, {hook}, store.back),
   );
