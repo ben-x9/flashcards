@@ -38,15 +38,17 @@ type C = string | Array<VNode>;
 
 // const isVNodeData = (x: any): x is VNodeData => isObject(x) && !x.sel;
 
-const genNamedTag = (type: string, name: string, style: string, a?: any, b?: any) =>
-  // name ?
-    // isVNodeData(a) ?
-    //   h(sel, set(a, {attrs: set(a.attrs || {}, {'data-name': name})}), b) :
-    //   h(sel, {attrs: {'data-name': name}}, a) :
-    h(type +
-      (process.env.NODE_ENV === 'development' && name ?
-        '.' + name : '') +
-      (style ? '.' + style : ''), a, b);
+const genNamedTag = (type: string, name: string, style: string, a?: any, b?: any) => {
+  const sel = type +
+    (process.env.NODE_ENV === 'development' && name ?
+      '.' + name : '') +
+    (style ? '.' + style : '');
+  // return name ?
+  //   isVNodeData(a) ?
+  //     h(sel, set(a, {attrs: set(a.attrs || {}, {'data-name': name})}), b) :
+  //     h(sel, {attrs: {'data-name': name}}, a) :
+  return h(sel, a, b);
+};
 
 const genTag = (type: string, name: string, a?: any, b?: any, c?: any) =>
   (typeof a === 'string' || Array.isArray(a)) && b !== undefined ?
