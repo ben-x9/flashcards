@@ -3,7 +3,7 @@ import { style } from 'typestyle';
 import { padding } from 'csstips';
 import { white, black } from 'colors';
 import * as Card from 'components/card';
-import * as Flippable from 'components/flippable';
+import flippable from 'components/flippable';
 
 export type Store = Card.Store;
 
@@ -16,8 +16,9 @@ const cardClass = style(
 });
 
 export const view = (store: Store, flipped: boolean, gap: number, onclick: () => void) =>
-  Flippable.vert(
+  flippable('list-item',
+    'vert',
+    flipped,
     div(cardClass, {on: {click: onclick}}, store.front),
     div([cardClass, style({right: gap, left: gap})], {on: {click: onclick}}, store.back),
-    flipped,
   );
