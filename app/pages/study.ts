@@ -39,6 +39,9 @@ interface Advance {
 
 export type Action = Flip | Mark | Advance | Goto;
 
+const nextCard = (cards: Store, state: State) =>
+  state.currentCard === cards.length - 1 ? 0 : state.currentCard + 1;
+
 export const update = (cards: Store, state: State, action: Action): [Store, State, Effect] => {
   switch (action.type) {
     case 'FLIP':
@@ -115,9 +118,6 @@ const ng = style({
   animationDuration: '0.3s',
   animationTimingFunction: 'ease',
 });
-
-const nextCard = (cards: Store, state: State) =>
-  state.currentCard === cards.length - 1 ? 0 : state.currentCard + 1;
 
 export const view = (cards: Store, state: State, update: Update<Action>) => div(
   {name: 'study'},
