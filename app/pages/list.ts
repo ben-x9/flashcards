@@ -67,27 +67,21 @@ export const update = (store: Store, state: State, action: Action): [Store, Stat
 const gap = 2;
 
 export const view = (cards: Store, state: State, update: Update<Action>) =>
-  div({name: 'list-view'},
-    style(vertical, width('100%')), [
+  div({name: 'list-view'}, style(vertical, width('100%')), [
     div({name: 'nav-bar'}, horizontalBar, [
       button(leftArrow + ' Study', () => update({type: 'GOTO', path: studyPath()}), [icon]),
       button(plus, () => update({type: 'ADD_CARD'}), [icon, alignRight]),
     ]),
-    div(
-      style(
-        vertical,
-        padding(gap),
-        verticallySpaced(gap),
-      ),
+    div(style(vertical, padding(gap), verticallySpaced(gap)),
       cards.slice().reverse().map((item, j) => {
-        const i = (cards.length - 1) - j;
+        const i = (cards.length - 1) - j; // index of card when not reversed
         return ListItem.view(item,
-          (action: ListItem.Action) =>
+          (action: ListItem.Action) => // update function
             update({type: 'LIST_ITEM', index: i, action}),
-          i === state.flippedItem,
+          i === state.flippedItem, // flipped?
           gap,
-          () => update({type: 'FLIP', index: i}),
-          i === state.editingItem,
+          () => update({type: 'FLIP', index: i}), // onclick
+          i === state.editingItem, // editing?
         );
       }),
     ),
