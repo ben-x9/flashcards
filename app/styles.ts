@@ -20,6 +20,14 @@ export const horizontalBar = style(
   {backgroundColor: toolbarGray},
 );
 
+export const alignCenter = style({
+  position: 'absolute',
+  left: '50%',
+  transform: 'translateX(-50%)',
+});
+
+export const alignRight = {marginLeft: 'auto'};
+
 export const icon = {fontFamily: 'FontAwesome, Arial, Helvetica, sans serif'};
 export const rightArrow = '\uf061';
 export const leftArrow = '\uf060';

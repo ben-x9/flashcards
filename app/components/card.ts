@@ -10,13 +10,13 @@ import { noselect } from 'styles';
 
 // MODEL
 
-export const newStore = (props: Partial<Card>): Card =>
+export const newStore = (props?: Partial<Card>): Card =>
   set({
     front: '',
     back: '',
     score: 0,
     showNext: new Date(),
-  } as Card, props);
+  } as Card, props || {});
 
 interface Card {
   front: string;

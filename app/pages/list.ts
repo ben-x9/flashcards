@@ -2,9 +2,8 @@ import { div } from 'core/html';
 import { style } from 'typestyle';
 import { vertical, verticallySpaced, padding, width } from 'csstips';
 import * as ListItem from 'components/list-item';
-import { set, Update } from 'core/common';
-import { toolbarGray } from 'colors';
-import { horizontalBar, icon, leftArrow } from 'styles';
+import { set, Update, setIndex } from 'core/common';
+import { horizontalBar, icon, leftArrow, plus, alignRight } from 'styles';
 import button from 'components/button';
 import { studyPath } from 'root';
 import { Goto, Effect } from 'core/effects';
@@ -16,6 +15,7 @@ export type Store = typeof newStore;
 
 export const newState = {
   flippedItem: null as number | null,
+  editingItem: null as number | null,
 };
 export type State = typeof newState;
 
@@ -26,30 +26,52 @@ interface Flip {
   index: number | null;
 }
 
-export type Action = Flip | Goto;
+interface AddCard {
+  type: 'ADD_CARD';
+}
 
-export const update = (state: State, action: Action): [State, Effect] => {
+interface ListItem {
+  type: 'LIST_ITEM';
+  index: number;
+  action: ListItem.Action;
+}
+
+export type Action = Flip | Goto | AddCard | ListItem;
+
+export const update = (store: Store, state: State, action: Action): [Store, State, Effect] => {
   switch (action.type) {
     case 'FLIP':
-      return [set(state, {
+      return [store, set(state, {
         flippedItem: state.flippedItem === action.index ? null : action.index,
       }), null];
     case 'GOTO':
-      return [state, action];
+      return [store, state, action];
+    case 'ADD_CARD':
+      return [
+        store.concat(ListItem.newStore()),
+        set(state, {editingItem: store.length}),
+        null,
+      ];
+    case 'LIST_ITEM':
+      const newCard = ListItem.update(store[action.index], action.action);
+      return [
+        setIndex(store, action.index, newCard),
+        state,
+        null,
+      ];
   }
 };
 
 // VIEW
 
-
-
 const gap = 2;
 
-export const view = (store: Store, state: State, update: Update<Action>) =>
+export const view = (cards: Store, state: State, update: Update<Action>) =>
   div({name: 'list-view'},
     style(vertical, width('100%')), [
     div({name: 'nav-bar'}, horizontalBar, [
       button(leftArrow + ' Study', () => update({type: 'GOTO', path: studyPath()}), [icon]),
+      button(plus, () => update({type: 'ADD_CARD'}), [icon, alignRight]),
     ]),
     div(
       style(
@@ -57,10 +79,16 @@ export const view = (store: Store, state: State, update: Update<Action>) =>
         padding(gap),
         verticallySpaced(gap),
       ),
-      store.slice().reverse().map((item, i) =>
-        ListItem.view(item, i === state.flippedItem, gap, () =>
-          update({type: 'FLIP', index: i}),
-        ),
-      ),
+      cards.slice().reverse().map((item, j) => {
+        const i = (cards.length - 1) - j;
+        return ListItem.view(item,
+          (action: ListItem.Action) =>
+            update({type: 'LIST_ITEM', index: i, action}),
+          i === state.flippedItem,
+          gap,
+          () => update({type: 'FLIP', index: i}),
+          i === state.editingItem,
+        );
+      }),
     ),
   ]);

@@ -65,8 +65,9 @@ export function update(store: Store, state: State, action: Action): [Store, Stat
       newState = set(state, {login});
       break;
     case 'LIST':
-      let listState: List.State;
-      [listState, effect] = List.update(state.list, action.action);
+      let listState: List.State, listStore: List.Store;
+      [listStore, listState, effect] = List.update(store.cards, state.list, action.action);
+      newStore = set(store, {cards: listStore});
       newState = set(state, {list: listState});
       break;
     case 'STUDY':

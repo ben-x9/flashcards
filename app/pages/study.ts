@@ -6,8 +6,7 @@ import { set, setIndex, Update } from 'core/common';
 import button from 'components/button';
 import { Goto, Effect } from 'core/effects';
 import { listPath } from 'root';
-import { toolbarGray } from 'colors';
-import { icon, plus, rightArrow, tick, cross, horizontalBar } from 'styles';
+import { icon, rightArrow, tick, cross, horizontalBar } from 'styles';
 
 // MODEL
 
@@ -123,10 +122,9 @@ export const view = (cards: Store, state: State, update: Update<Action>) => div(
   {name: 'study'},
   style(vertical, width('100%'), height('100%')), [
     div({name: 'nav-bar'}, horizontalBar, [
-      button('List ' + rightArrow, () => update({type: 'GOTO', path: listPath()}), [{
-        marginLeft: 'auto',
-        minWidth: '45px',
-      }, icon]),
+      button('List ' + rightArrow,
+        () => update({type: 'GOTO', path: listPath()}),
+        [{marginLeft: 'auto'}, icon]),
     ]),
     div({name: 'body'},
       style(
