@@ -86,11 +86,11 @@ document.body.style.backgroundColor = lightGray;
 
 type Path<Data extends Object> = (data: Data) => string;
 
-export const homePath = path('/', 'HOME');
-export const loginPath = path('/login', 'LOGIN');
-export const userPath: Path<{name: string}> = path('/user/:name', 'USER');
+// export const homePath = path('/', 'HOME');
+// export const loginPath = path('/login', 'LOGIN');
+// export const userPath: Path<{name: string}> = path('/user/:name', 'USER');
 
-export const studyPath = path('/study', 'STUDY');
+export const studyPath = path('/', 'STUDY');
 export const listPath = path('/list', 'LIST');
 
 export function view(store: Store, state: State, path: string, update: (action: Action) => void) {
