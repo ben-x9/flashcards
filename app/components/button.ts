@@ -1,18 +1,19 @@
 import { div } from 'core/html';
 import { style, types } from 'typestyle';
-import { lightgray } from 'csx';
+import { buttonGray, buttonHoverGray } from 'colors';
 import { content, padding } from 'csstips';
 import { noselect } from 'styles';
 
-export default (label: string, styles: types.NestedCSSProperties[], onclick: () => void) =>
+export default (label: string, onclick: () => void, styles: types.NestedCSSProperties[] = []) =>
   div({name: 'button'}, [style(content, padding(10), {
-    backgroundColor: lightgray.toString(),
+    backgroundColor: buttonGray,
     cursor: 'pointer',
     borderRadius: '3px',
     textAlign: 'center',
+    minWidth: '45px',
     $nest: {
       '&:hover': {
-        backgroundColor: lightgray.lighten(0.05).toString(),
+        backgroundColor: buttonHoverGray,
       },
     },
   }, ...styles), noselect], {on: {click: onclick}}, label);

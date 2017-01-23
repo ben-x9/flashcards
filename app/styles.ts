@@ -1,4 +1,6 @@
 import { style } from 'typestyle';
+import { padding, horizontal, horizontallySpaced } from 'csstips';
+import { toolbarGray } from 'colors';
 
 export const noselect = style({
   // $debugName: 'noselect',
@@ -9,3 +11,18 @@ export const noselect = style({
   userSelect: 'none', /* Non-prefixed version, currently
                         supported by Chrome and Opera */
 });
+
+
+export const horizontalBar = style(
+  horizontal,
+  horizontallySpaced(3),
+  padding(3),
+  {backgroundColor: toolbarGray},
+);
+
+export const icon = {fontFamily: 'FontAwesome, Arial, Helvetica, sans serif'};
+export const rightArrow = '\uf061';
+export const leftArrow = '\uf060';
+export const plus = '\uf067';
+export const tick = '\uf00c';
+export const cross = '\uf00d';

@@ -1,11 +1,13 @@
 import { div } from 'core/html';
 import { style, keyframes } from 'typestyle';
-import { vertical, verticallySpaced, horizontal, horizontallySpaced, centerCenter, padding, width, height, flex } from 'csstips';
+import { vertical, verticallySpaced, horizontal, horizontallySpaced, centerCenter, padding, width, height, flex, startJustified } from 'csstips';
 import * as Card from 'components/card';
 import { set, setIndex, Update } from 'core/common';
 import button from 'components/button';
 import { Goto, Effect } from 'core/effects';
 import { listPath } from 'root';
+import { toolbarGray } from 'colors';
+import { icon, plus, rightArrow, tick, cross, horizontalBar } from 'styles';
 
 // MODEL
 
@@ -117,13 +119,14 @@ const ng = style({
 const nextCard = (cards: Store, state: State) =>
   state.currentCard === cards.length - 1 ? 0 : state.currentCard + 1;
 
-const horizontalBar = style(horizontal, horizontallySpaced(3), padding(3));
-
 export const view = (cards: Store, state: State, update: Update<Action>) => div(
   {name: 'study'},
   style(vertical, width('100%'), height('100%')), [
     div({name: 'nav-bar'}, horizontalBar, [
-      button('List', [], () => update({type: 'GOTO', path: listPath()})),
+      button('List ' + rightArrow, () => update({type: 'GOTO', path: listPath()}), [{
+        marginLeft: 'auto',
+        minWidth: '45px',
+      }, icon]),
     ]),
     div({name: 'body'},
       style(
@@ -148,8 +151,8 @@ export const view = (cards: Store, state: State, update: Update<Action>) => div(
     ]),
     div({name: 'button-bar'},
       horizontalBar, [
-      button('NG', [flex], () => update({type: 'MARK', correct: false})),
-      button('OK', [flex], () => update({type: 'MARK', correct: true})),
+      button(cross, () => update({type: 'MARK', correct: false}), [flex, icon]),
+      button(tick, () => update({type: 'MARK', correct: true}), [flex, icon]),
     ]),
   ],
 );
