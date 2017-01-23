@@ -5,6 +5,6 @@ interface ReadonlyArray<T> {
   * @param start The beginning of the specified portion of the array.
   * @param end The end of the specified portion of the array.
   */
-  slice(start?: number, end?: number): ReadonlyArray<T>;
+  slice(start?: number, end?: number): Array<T>;
   readonly [n: number]: T;
 }
