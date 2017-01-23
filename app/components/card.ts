@@ -38,6 +38,7 @@ const faceStyle = style(
   color: white.toString(),
   borderRadius: 5,
   textAlign: 'center',
+  cursor: 'pointer',
   },
 );
 

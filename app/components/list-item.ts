@@ -16,6 +16,7 @@ const cardClass = style(
   backgroundColor: black,
   textAlign: 'center',
   borderRadius: '3px',
+  cursor: 'pointer',
 });
 
 const center = style({
