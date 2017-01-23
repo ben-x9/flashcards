@@ -63,7 +63,7 @@ function update(action: Action) {
   const [newStore, newState, effect] =
     action.type === 'POP' ?
       [ store,
-        json.diff(state, action.state) ? action.state : state,
+        /*json.diff(state, action.state) ? action.state :*/ state,
         null] :
       Root.update(store, state, action);
   if (process.env.NODE_ENV === 'development')
