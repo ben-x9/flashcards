@@ -3,7 +3,9 @@ import { style, keyframes } from 'typestyle';
 import { vertical, verticallySpaced, horizontal, horizontallySpaced, centerCenter, padding, width, height, flex } from 'csstips';
 import * as Card from 'components/card';
 import { set, setIndex, Update } from 'core/common';
-import * as Button from 'components/button';
+import button from 'components/button';
+import { Goto, Effect } from 'core/effects';
+import { listPath } from 'root';
 
 // MODEL
 
@@ -33,14 +35,18 @@ interface Advance {
   type: 'ADVANCE';
 }
 
-export type Action = Flip | Mark | Advance;
+export type Action = Flip | Mark | Advance | Goto;
 
-export const update = (cards: Store, state: State, action: Action): [Store, State] => {
+export const update = (cards: Store, state: State, action: Action): [Store, State, Effect] => {
   switch (action.type) {
     case 'FLIP':
-      return [cards, set(state, {
-        flipped: !state.flipped,
-      })];
+      return [
+        cards,
+        set(state, {
+          flipped: !state.flipped,
+        }),
+        null,
+      ];
     case 'MARK':
       const oldCard = cards[state.currentCard];
       const newCard = set(oldCard, {
@@ -53,6 +59,7 @@ export const update = (cards: Store, state: State, action: Action): [Store, Stat
           ng: !action.correct,
           flipped: false,
         }),
+        null,
       ];
     case 'ADVANCE':
       return [
@@ -63,7 +70,14 @@ export const update = (cards: Store, state: State, action: Action): [Store, Stat
           ok: false,
           ng: false,
         }),
-      ]
+        null,
+      ];
+    case 'GOTO':
+      return [
+        cards,
+        state,
+        action,
+      ];
   }
 };
 
@@ -101,13 +115,19 @@ const ng = style({
 });
 
 const nextCard = (cards: Store, state: State) =>
-  state.currentCard === cards.length - 1 ? 0 : state.currentCard + 1
+  state.currentCard === cards.length - 1 ? 0 : state.currentCard + 1;
+
+const horizontalBar = style(horizontal, horizontallySpaced(3), padding(3));
 
 export const view = (cards: Store, state: State, update: Update<Action>) => div(
   {name: 'study'},
   style(vertical, width('100%'), height('100%')), [
+    div({name: 'nav-bar'}, horizontalBar, [
+      button('List', [], () => update({type: 'GOTO', path: listPath()})),
+    ]),
     div({name: 'body'},
       style(
+        flex,
         padding(10),
         vertical,
         verticallySpaced(10),
@@ -127,9 +147,9 @@ export const view = (cards: Store, state: State, update: Update<Action>) => div(
         }),
     ]),
     div({name: 'button-bar'},
-      style(horizontal, horizontallySpaced(3), padding(3)), [
-      Button.view('NG', [flex], () => update({type: 'MARK', correct: false})),
-      Button.view('OK', [flex], () => update({type: 'MARK', correct: true})),
+      horizontalBar, [
+      button('NG', [flex], () => update({type: 'MARK', correct: false})),
+      button('OK', [flex], () => update({type: 'MARK', correct: true})),
     ]),
   ],
 );

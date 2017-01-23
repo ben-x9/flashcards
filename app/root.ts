@@ -51,8 +51,8 @@ interface DeckAction {
 
 export type Action = HomeAction | LoginAction | DeckAction | ListAction;
 
-export function update(model: Store, state: State, action: Action): [Store, State, Effect] {
-  let newModel: Store = model;
+export function update(store: Store, state: State, action: Action): [Store, State, Effect] {
+  let newStore: Store = store;
   let newState: State = state;
   let effect: Effect = null;
   switch (action.type) {
@@ -69,12 +69,13 @@ export function update(model: Store, state: State, action: Action): [Store, Stat
       newState = set(state, {list: listState});
       break;
     case 'STUDY':
-      let [cards, studyState] = Study.update(model.cards, state.study, action.action);
-      newModel = set(model, {cards});
+      let cards: Study.Store, studyState: Study.State;
+      [cards, studyState, effect] = Study.update(store.cards, state.study, action.action);
+      newStore = set(store, {cards});
       newState = set(state, {study: studyState});
       break;
   }
-  return [newModel, newState, effect];
+  return [newStore, newState, effect];
 };
 
 

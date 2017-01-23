@@ -4,7 +4,7 @@ import { lightgray } from 'csx';
 import { content, padding } from 'csstips';
 import { noselect } from 'styles';
 
-export const view = (label: string, styles: types.NestedCSSProperties[], onclick: () => void) =>
+export default (label: string, styles: types.NestedCSSProperties[], onclick: () => void) =>
   div({name: 'button'}, [style(content, padding(10), {
     backgroundColor: lightgray.toString(),
     cursor: 'pointer',
