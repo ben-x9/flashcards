@@ -6,7 +6,7 @@ import { set, setIndex, Update } from 'core/common';
 import button from 'components/button';
 import { Goto, Effect } from 'core/effects';
 import { listPath } from 'root';
-import { icon, rightArrow, tick, cross, horizontalBar } from 'styles';
+import { icon, rightArrow, tick, cross, horizontalBar, alignRight } from 'styles';
 
 // MODEL
 
@@ -124,7 +124,8 @@ export const view = (cards: Store, state: State, update: Update<Action>) => div(
     div({name: 'nav-bar'}, horizontalBar, [
       button('List ' + rightArrow,
         () => update({type: 'GOTO', path: listPath()}),
-        [{marginLeft: 'auto'}, icon]),
+        [alignRight, icon]
+      ),
     ]),
     div({name: 'body'},
       style(
@@ -135,8 +136,10 @@ export const view = (cards: Store, state: State, update: Update<Action>) => div(
         centerCenter,
         width('100%'),
         height('100%'),
-        {overflow: 'hidden'}),
-      {on: {click: () => update({type: 'FLIP'})}}, [
+        {overflow: 'hidden'}
+      ),
+      {on: {click: () => update({type: 'FLIP'})}},
+      [
         Card.view(cards[nextCard(cards, state)], false, [abs, invisible], {
           class: {[invisible]: !state.ok && !state.ng},
         }),
@@ -146,9 +149,9 @@ export const view = (cards: Store, state: State, update: Update<Action>) => div(
               update({type: 'ADVANCE'})},
           class: {[ok]: state.ok, [ng]: state.ng},
         }),
-    ]),
-    div({name: 'button-bar'},
-      horizontalBar, [
+      ],
+    ),
+    div({name: 'button-bar'}, horizontalBar, [
       button(cross, () => update({type: 'MARK', correct: false}), [flex, icon]),
       button(tick, () => update({type: 'MARK', correct: true}), [flex, icon]),
     ]),
