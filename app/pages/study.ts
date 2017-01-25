@@ -53,9 +53,9 @@ export const update = (cards: Store, state: State, action: Action): [Store, Stat
       ];
     case 'MARK':
       const oldCard = cards[state.currentCard];
-      const newCard = set(oldCard, {
-        score: action.correct ? oldCard.score + 1 : 0,
-      });
+      const newCard = !state.ng && !state.ok ?
+        set(oldCard, {score: action.correct ? oldCard.score + 1 : 0}) :
+        oldCard;
       return [
         setIndex(cards, state.currentCard, newCard),
         set(state, {
