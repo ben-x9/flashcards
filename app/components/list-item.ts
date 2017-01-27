@@ -101,6 +101,6 @@ export const view = (store: Card.Store, update: Update<Action>, flipped: boolean
   flippable('list-item',
     'vert',
     flipped,
-    textWithTicks(store,　'front', update, onclick, editable, !flipped),
+    textWithTicks(store, 'front', update, onclick, editable, !flipped, style({right: gap, left: gap})),
     textWithTicks(store, 'back', update, onclick, editable, flipped, style({right: gap, left: gap})),
   );

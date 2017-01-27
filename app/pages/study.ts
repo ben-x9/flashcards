@@ -136,20 +136,27 @@ export const view = (cards: Store, state: State, update: Update<Action>) => div(
         centerCenter,
         width('100%'),
         height('100%'),
-        {overflow: 'hidden'}
+        {overflow: 'hidden'},
       ),
       {on: {click: () => update({type: 'FLIP'})}},
+      div(style(vertical),
       [
-        Card.view(cards[nextCard(cards, state)], false, [abs, invisible], {
-          class: {[invisible]: !state.ok && !state.ng},
+        Card.view(
+          cards[nextCard(cards, state)],
+          false,
+          [abs],
+          {class: {[invisible]: !state.ok && !state.ng},
         }),
-        Card.view(cards[state.currentCard], state.flipped, [abs, ok, ng], {
-          on: {animationend: (e: AnimationEvent) =>
-            (e.animationName === slideRight || e.animationName === slideLeft) &&
-              update({type: 'ADVANCE'})},
-          class: {[ok]: state.ok, [ng]: state.ng},
-        }),
-      ],
+        Card.view(
+          cards[state.currentCard],
+          state.flipped,
+          [],
+          { on: {animationend: (e: AnimationEvent) =>
+              (e.animationName === slideRight ||
+               e.animationName === slideLeft) && update({type: 'ADVANCE'})},
+            class: {[ok]: state.ok, [ng]: state.ng}},
+        ),
+      ]),
     ),
     div({name: 'button-bar'}, horizontalBar, [
       button(cross, () => update({type: 'MARK', correct: false}), [flex, icon]),
