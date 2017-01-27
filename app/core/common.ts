@@ -24,10 +24,21 @@ export function setIndex<T>(array: ReadonlyArray<T>, index: number, value: T): R
   if (array[index] === value) {
     return array;
   } else {
-    const copy = array.slice() as T[];
-    copy[index] = value;
-    return copy;
+    const clone = array.slice() as T[];
+    clone[index] = value;
+    return clone;
   }
 }
 
+export function delIndex<T>(array: ReadonlyArray<T>, index: number): ReadonlyArray<T> {
+  const clone = (array as T[]).slice();
+  clone.splice(index, 1);
+  return clone;
+}
+
 export const isObject = (x: any) => typeof x === 'object' && !Array.isArray(x);
+
+export function stop<T>(a: T): T {
+  debugger;
+  return a;
+}
