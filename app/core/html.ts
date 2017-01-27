@@ -63,3 +63,4 @@ export const tag = (type: string): HyperScriptFunc =>
 
 export const div = tag('div');
 export const input = tag('input');
+export const textarea = tag('textarea');
