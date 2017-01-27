@@ -53,12 +53,22 @@ export const update = (store: Store, state: State, action: Action): [Store, Stat
         null,
       ];
     case 'LIST_ITEM':
-      const newCard = ListItem.update(store[action.index], action.action);
-      return [
-        setIndex(store, action.index, newCard),
-        state,
-        null,
-      ];
+      const [newCard, effect] = ListItem.update(store[action.index], action.action);
+      let newStore = setIndex(store, action.index, newCard);
+      let newEffect: Effect = null;
+      if (effect) {
+        switch (effect.type) {
+          case 'FLIP':
+            [newStore, state, newEffect] = update(newStore, state, {
+              type: 'FLIP', index: action.index,
+            });
+            break;
+          case 'STOP_EDITING':
+            state = set(state, {editingItem: null});
+            break;
+        }
+      }
+      return [newStore, state, newEffect];
   }
 };
 

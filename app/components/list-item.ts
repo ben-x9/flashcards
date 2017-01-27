@@ -1,4 +1,5 @@
 import { div, input } from 'core/html';
+import { VNode } from 'snabbdom/vnode';
 import { style } from 'typestyle';
 import { padding, horizontal } from 'csstips';
 import { white, black } from 'colors';
@@ -7,12 +8,12 @@ import flippable from 'components/flippable';
 import { icon, tick, alignCenter, alignRight } from 'styles';
 import { times } from 'lodash';
 import { set, Update } from 'core/common';
+import { defer } from 'lodash';
 
 // MODEL
 
 export type Store = Card.Store;
 export const newStore = Card.newStore;
-
 
 // UPDATE
 
@@ -22,12 +23,25 @@ interface SetCard {
   text: string;
 }
 
-export type Action = SetCard;
+interface Flip {
+  type: 'FLIP';
+};
 
-export const update = (card: Store, action: Action): Store => {
+interface StopEditing {
+  type: 'STOP_EDITING';
+}
+
+export type Action = SetCard | Flip | StopEditing;
+export type Effect = Flip | StopEditing | null;
+
+export const update = (card: Store, action: Action): [Store, Effect] => {
   switch (action.type) {
     case 'SET_CARD':
-      return set(card, {[action.face]: action.text});
+      return [set(card, {[action.face]: action.text}), null];
+    case 'FLIP':
+      return [card, action];
+    case 'STOP_EDITING':
+      return [card, action];
   }
 };
 
@@ -44,15 +58,21 @@ const cardClass = style(
   cursor: 'pointer',
 });
 
-const textWithTicks = (text: string, numTicks: number, face: 'front' | 'back', update: Update<Action>, onclick: () => void, editable: boolean, styleName?: string) =>
+const textWithTicks = (card: Store, face: 'front' | 'back', update: Update<Action>, onclick: () => void, editable: boolean, isShowing: boolean, styleName?: string) =>
   div(styleName ? [cardClass, styleName] : cardClass, {on: {click: onclick}}, [
     editable ?
-      input([alignCenter, style({
-        textAlign: 'center',
-        color: white,
-        backgroundColor: black,
-      })], {
-        props: {type: 'text', value: text},
+      input([
+        alignCenter,
+        style({
+          textAlign: 'center',
+          color: white,
+          backgroundColor: black,
+          outline: 'none',
+          border: 'none',
+          width: '90%',
+        }),
+      ], {
+        props: {type: 'text', value: card[face]},
         on: {
           click: (e: Event) => e.stopPropagation(),
           input: (e: Event) => update({
@@ -60,21 +80,27 @@ const textWithTicks = (text: string, numTicks: number, face: 'front' | 'back', u
             face,
             text: (e.target as HTMLInputElement).value,
           }),
-          keypress: (e: KeyboardEvent) => {
-            // if (e.keyCode === 13)
-          },
+          keypress: (e: KeyboardEvent) => e.keyCode === 13 &&
+            (face === 'front' ?
+              update({type: 'FLIP'}) :
+              update({type: 'STOP_EDITING'})),
+        },
+        hook: {
+          insert: (vnode) =>
+            isShowing && (vnode.elm as HTMLInputElement).focus(),
+          update: (old, vnode) =>
+            isShowing && (vnode.elm as HTMLInputElement).focus(),
         },
       }) :
-      div(alignCenter, text),
+      div(alignCenter, card[face]),
     div([style(alignRight, horizontal, {minHeight: '18px'})],
-      times(numTicks, () => div([style(icon)], tick))),
+      times(card.score, () => div([style(icon)], tick))),
   ]);
 
-export const view = (store: Store, update: Update<Action>, flipped: boolean, gap: number, onclick: () => void, editable = false) =>
+export const view = (store: Card.Store, update: Update<Action>, flipped: boolean, gap: number, onclick: () => void, editable = false) =>
   flippable('list-item',
     'vert',
     flipped,
-    textWithTicks(store.front, store.score, 'front', update, onclick, editable),
-    textWithTicks(store.back, store.score, 'back', update, onclick, editable,
-      style({right: gap, left: gap})),
+    textWithTicks(store,　'front', update, onclick, editable, !flipped),
+    textWithTicks(store, 'back', update, onclick, editable, flipped, style({right: gap, left: gap})),
   );
